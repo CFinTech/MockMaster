@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accelerate Your Career · Career.io</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            background: #f9fafb;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Sidebar (与 template 统一) */
+        #sidebar {
+            width: 240px;
+            background: #fff;
+            border-right: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 1.2em;
+            font-weight: 700;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            background: #6366f1;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .profile-section {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f97316;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .profile-info .name {
+            font-weight: 600;
+        }
+
+        .profile-info .role {
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        .menu {
+            list-style: none;
+            margin: 20px 0;
+            padding: 0;
+        }
+
+        .menu li {
+            margin: 5px 0;
+        }
+
+        .menu li a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            border-radius: 4px;
+        }
+
+        .menu li.active a {
+            background: #e7f0fe;
+            color: #265ed4;
+            font-weight: 600;
+        }
+
+        /* Top Navigation (与 template 统一) */
+        .main-section {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: #fff;
+        }
+
+        .topbar .topnav {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+        .topbar nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .topbar nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .topbar nav a:hover {
+            color: #000;
+        }
+
+        .upgrade-btn {
+            background: #6366f1;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+
+        .upgrade-btn:hover {
+            background: #5056c7;
+        }
+
+        /* Main Content & Layout */
+        #main-content {
+            flex: 1;
+            display: flex;
+            width: 100%;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .layout-flex {
+            flex: 1;
+            display: flex;
+            width: 100%;
+            gap: 20px;
+        }
+
+        /* Calendar Month View */
+        #calendar-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            padding: 10px;
+        }
+
+        .cal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .cal-header button {
+            background: transparent;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        #cal-title {
+            font-size: 1.1em;
+        }
+
+        /* 周一–周日表头 */
+        .day-names {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 5px;
+            background: #eef2f7;
+            color: #334155;
+        }
+
+        .day-names div {
+            padding: 8px 0;
+        }
+
+        #calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-auto-rows: 1fr;
+            gap: 1px;
+            background: #e5e7eb;
+            flex: 1;
+            width: 100%;
+        }
+
+        .cal-cell {
+            background: #fff;
+            padding: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cal-cell:hover {
+            background: #f0f4f8;
+        }
+
+        .event {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            color: #fff;
+        }
+
+        .event-red {
+            background: #f87171;
+        }
+
+        .event-blue {
+            background: #60a5fa;
+        }
+
+        .event-green {
+            background: #34d399;
+        }
+
+        /* Daily View */
+        #daily-view {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            padding: 10px;
+        }
+
+        .daily-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .daily-back {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            color: #265ed4;
+        }
+
+        .daily-title {
+            font-size: 1.1em;
+        }
+
+        #daily-grid {
+            flex: 1;
+            position: relative;
+            border-top: 1px solid #e5e7eb;
+            width: 100%;
+        }
+
+        .time-slot {
+            height: 40px;
+            border-bottom: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        .time-label {
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 0.75em;
+            color: #888;
+            width: 40px;
+            text-align: right;
+            padding-right: 5px;
+        }
+
+        .slot-content {
+            margin-left: 50px;
+            height: 100%;
+        }
+
+        .selecting {
+            background: rgba(100, 149, 237, 0.3);
+            position: absolute;
+            z-index: 10;
+        }
+
+        /* Notes Sidebar */
+        #notes-sidebar {
+            flex: 0 0 200px;
+            background: #fff;
+            border-left: 1px solid #e5e7eb;
+            padding: 10px;
+            position: sticky;
+            top: 0;
+
+            /* 占满整栏并垂直布局 */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        #add-note {
+            background: #265ed4;
+            color: #fff;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        #notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .note {
+            position: relative;
+            padding: 4px 28px 4px 4px;
+            background: #fffbcc;
+            border-radius: 4px;
+            cursor: move;
+        }
+
+        .note-text[contenteditable="true"],
+        .note-text:focus {
+            outline: none !important;
+            border: none !important;
+        }
+
+        .note.editing {
+            box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.6);
+            background-color: #fffbdd;
+        }
+
+        .delete-btn {
+            display: block;
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: transparent;
+            border: none;
+            font-size: 1.2em;
+            color: #999;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 280px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .modal-content label {
+            display: block;
+            margin: 8px 0;
+            font-size: 0.9em;
+        }
+
+        .modal-content input[type="text"],
+        .modal-content input[type="time"],
+        .modal-content textarea {
+            width: 100%;
+            padding: 4px 6px;
+            margin-top: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        #color-picker {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .color-btn,
+        #evt-color {
+            width: 24px;
+            height: 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0.6;
+            vertical-align: middle;
+            padding: 0;
+            margin: 0;
+        }
+
+        .event-block {
+            position: absolute;
+            left: 50px;
+            right: 4px;
+            padding: 4px;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.75em;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .color-btn.selected,
+        #evt-color.selected {
+            outline: 2px solid #333;
+            opacity: 1;
+        }
+
+        .modal-actions {
+            text-align: right;
+            margin-top: 12px;
+        }
+
+        .modal-actions button {
+            padding: 6px 12px;
+            margin-left: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #evt-cancel {
+            background: #e5e7eb;
+        }
+
+        #evt-confirm {
+            background: #6366f1;
+            color: #fff;
+        }
+
+        .event-block .evt-title {
+            font-weight: bold;
+            display: block;
+        }
+
+        .event-block .evt-desc {
+            font-size: 0.7em;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .cal-cell {
+            overflow: hidden;
+        }
+
+        .cal-cell.today {
+            background-color: #eff6ff;
+            border: 2px solid #6366f1;
+            box-sizing: border-box;
+        }
+
+        .cell-events {
+            position: absolute;
+            top: 20px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.75em;
+            line-height: 1.2em;
+            overflow: hidden;
+        }
+
+        .cell-events .event-name {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .menu-item-label {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item-label::before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #9ca3af;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .menu li.active .menu-item-label::before {
+            background: #265ed4;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <aside id="sidebar">
+            <div class="sidebar-content">
+                <!-- Logo -->
+                <div class="logo">career.io</div>
+                <!-- Profile Section -->
+                <div class="profile-section">
+                    <div class="avatar">5%</div>
+                    <div class="profile-info">
+                        <div class="name">add sub</div>
+                        <div class="role">Set your target role</div>
+                    </div>
+                </div>
+                <!-- Menu -->
+                <ul class="menu">
+                    <li><a href="#"><span class="menu-item-label">Interview Prepare</span></a></li>
+                    <li><a href="#"><span class="menu-item-label">Mock Interview</span></a></li>
+                    <li><a href="#"><span class="menu-item-label">Resumes</span></a></li>
+                    <li><a href="#"><span class="menu-item-label">Job Tracker</span></a></li>
+                    <li class="active"><a href="#"><span class="menu-item-label">Calendar</span></a></li>
+                </ul>
+            </div>
+        </aside>
+        <div class="main-section">
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <nav class="topnav">
+                    <a href="#">Contact Us</a>
+                    <!-- <a href="#">Excel at Your Job</a>
+                    <a href="#">Switch Career</a> -->
+                </nav>
+                <button class="upgrade-btn">Upgrade Now</button>
+            </header>
+            <main id="main-content">
+
+                <div class="layout-flex">
+                    <!-- Month View -->
+                    <div id="calendar-container">
+                        <div class="cal-header">
+                            <button id="prev-month">&lt;</button>
+                            <div id="cal-title"></div>
+                            <button id="next-month">&gt;</button>
+                        </div>
+                        <div class="day-names">
+                            <div>周一</div>
+                            <div>周二</div>
+                            <div>周三</div>
+                            <div>周四</div>
+                            <div>周五</div>
+                            <div>周六</div>
+                            <div>周日</div>
+                        </div>
+                        <div id="calendar-grid"></div>
+                    </div>
+                    <!-- Daily View -->
+                    <div id="daily-view">
+                        <div class="daily-header">
+                            <button class="daily-back">← 返回</button>
+                            <div class="daily-title"></div>
+                        </div>
+                        <div id="daily-grid"></div>
+                    </div>
+                    <!-- Notes -->
+                    <aside id="notes-sidebar">
+                        <h3>便签</h3>
+                        <button id="add-note">＋ 新建</button>
+                        <div id="notes-list"></div>
+                    </aside>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 事件数据存储
+            const evMap = {}; // {'YYYY-M-D': [{startHour,endHour,title,desc,color}]}
+            let currDate = new Date(),
+                currMonth = currDate.getMonth(),
+                currYear = currDate.getFullYear();
+            const calCont = document.getElementById('calendar-container'),
+                dailyView = document.getElementById('daily-view');
+
+            // —— 渲染月视图 ——
+            function renderCalendar(m, y) {
+                const grid = document.getElementById('calendar-grid');
+                grid.innerHTML = '';
+                const days = new Date(y, m + 1, 0).getDate();
+                const offset = (new Date(y, m, 1).getDay() + 6) % 7;
+                // 前置空格
+                for (let i = 0; i < offset; i++) {
+                    grid.appendChild(document.createElement('div'));
+                }
+                // 真正日期格
+                for (let d = 1; d <= days; d++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cal-cell';
+
+                    // 高亮今天
+                    const today = new Date();
+                    if (
+                        d === today.getDate() &&
+                        m === today.getMonth() &&
+                        y === today.getFullYear()
+                    ) {
+                        cell.classList.add('today');
+                    }
+
+                    cell.textContent = d;
+                    const key = `${y}-${m + 1}-${d}`;
+                    if (evMap[key]) {
+                        addEventNames(cell, evMap[key]);
+                    }
+                    cell.ondblclick = () => openDaily(d, m, y);
+                    grid.appendChild(cell);
+                }
+
+                document.getElementById('cal-title').textContent = `${y} 年 ${m + 1} 月`;
+            }
+            document.getElementById('prev-month').onclick = () => {
+                currMonth = (currMonth + 11) % 12;
+                if (currMonth === 11) currYear--;
+                renderCalendar(currMonth, currYear);
+            };
+            document.getElementById('next-month').onclick = () => {
+                currMonth = (currMonth + 1) % 12;
+                if (currMonth === 0) currYear++;
+                renderCalendar(currMonth, currYear);
+            };
+            renderCalendar(currMonth, currYear);
+
+            // —— 添加事件名称列表 ——  
+            function addEventNames(cell, events) {
+                const container = document.createElement('div');
+                container.className = 'cell-events';
+                const maxDisplay = 3; // 最多显示 3 条，超过则最后一条显示省略号
+                events.forEach((e, idx) => {
+                    if (idx < maxDisplay) {
+                        const div = document.createElement('div');
+                        div.className = 'event-name';
+                        div.textContent = e.title;
+                        container.appendChild(div);
+                    } else if (idx === maxDisplay) {
+                        const div = document.createElement('div');
+                        div.className = 'event-name';
+                        div.textContent = '…';
+                        container.appendChild(div);
+                    }
+                });
+                cell.appendChild(container);
+            }
+
+            // —— 日视图打开/关闭 ——  
+            function openDaily(d, m, y) {
+                calCont.style.display = 'none';
+                dailyView.style.display = 'flex';
+                document.querySelector('.daily-title').textContent = `${y}年${m + 1}月${d}日`;
+                renderDailyGrid(d, m, y);
+            }
+            document.querySelector('.daily-back').onclick = () => {
+                dailyView.style.display = 'none';
+                calCont.style.display = 'flex';
+                renderCalendar(currMonth, currYear);
+            };
+
+            // —— 渲染日视图 ——  
+            function renderDailyGrid(d, m, y) {
+                const dg = document.getElementById('daily-grid');
+                dg.innerHTML = '';
+                for (let h = 0; h < 24; h++) {
+                    const slot = document.createElement('div');
+                    slot.className = 'time-slot';
+                    slot.dataset.hour = h;
+                    slot.style.position = 'relative';
+                    slot.addEventListener('dblclick', () => onSlotDblClick(`${y}-${m + 1}-${d}`, h));
+                    const lbl = document.createElement('div');
+                    lbl.className = 'time-label';
+                    lbl.textContent = `${h}:00`;
+                    slot.append(lbl);
+                    dg.append(slot);
+                }
+                const key = `${y}-${m + 1}-${d}`;
+                if (evMap[key]) {
+                    evMap[key].forEach(evt => createEventBlock(key, evt));
+                }
+            }
+
+            // —— 以下保留原有的事件模态窗及日视图渲染逻辑 ——  
+            let currentKey = '', currentHour = 0;
+            function onSlotDblClick(key, hour) {
+                currentKey = key;
+                currentHour = hour;
+                openEventModal(hour);
+            }
+            function openEventModal(hour) {
+                const modal = document.getElementById('event-modal');
+                modal.querySelector('#evt-title').value = '';
+                modal.querySelector('#evt-start').value = `${String(hour).padStart(2, '0')}:00`;
+                modal.querySelector('#evt-end').value = `${String(hour + 1).padStart(2, '0')}:00`;
+                modal.querySelector('#evt-desc').value = '';
+                document.querySelectorAll('.color-btn, #evt-color')
+                    .forEach(el => el.classList.remove('selected'));
+                document.getElementById('evt-color').value = '#f87171';
+                modal.classList.remove('hidden');
+            }
+            function closeEventModal() {
+                document.getElementById('event-modal').classList.add('hidden');
+            }
+            const colorBtns = document.querySelectorAll('.color-btn');
+            const colorInput = document.getElementById('evt-color');
+            colorBtns.forEach(btn => btn.addEventListener('click', () => {
+                colorBtns.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                colorInput.value = btn.dataset.color;
+            }));
+            colorInput.addEventListener('input', () => {
+                colorBtns.forEach(b => b.classList.remove('selected'));
+                colorInput.classList.add('selected');
+            });
+            document.getElementById('evt-cancel').onclick = closeEventModal;
+            document.getElementById('evt-confirm').onclick = () => {
+                const title = document.getElementById('evt-title').value.trim();
+                const start = document.getElementById('evt-start').value;
+                const end = document.getElementById('evt-end').value;
+                const desc = document.getElementById('evt-desc').value.trim();
+                const color = colorInput.value;
+                if (!title || !start || !end) return alert('请填写标题和时间');
+                const [sH] = start.split(':').map(Number);
+                const [eH] = end.split(':').map(Number);
+                const evt = { startHour: sH, endHour: eH, title, desc, color };
+                if (!evMap[currentKey]) evMap[currentKey] = [];
+                evMap[currentKey].push(evt);
+                renderCalendar(currMonth, currYear);
+                createEventBlock(currentKey, evt);
+                closeEventModal();
+            };
+
+            function createEventBlock(key, evt) {
+                const titleTxt = document.querySelector('.daily-title').textContent;
+                const [y, mo, d] = key.split('-');
+                if (titleTxt !== `${y}年${mo}月${d}日`) return;
+                const dg = document.getElementById('daily-grid');
+                const block = document.createElement('div');
+                block.className = 'event-block';
+                block.style.backgroundColor = evt.color;
+                block.style.top = `${evt.startHour * 40}px`;
+                block.style.height = `${(evt.endHour - evt.startHour) * 40}px`;
+                block.innerHTML = `
+                <span class="evt-title">${evt.title}</span>
+                <span class="evt-desc">${evt.desc}</span>
+            `;
+                dg.append(block);
+            }
+        });
+
+        const notesList = document.getElementById('notes-list');
+        let dragSrcEl = null;
+
+        function createNote(text = '双击编辑便签内容') {
+            const noteEl = document.createElement('div');
+            noteEl.className = 'note';
+            noteEl.draggable = true;
+
+            // 文本块
+            const textEl = document.createElement('span');
+            textEl.className = 'note-text';
+            textEl.textContent = text;
+
+            // 双击开始编辑：容器加 'editing'，文本可编辑
+            textEl.addEventListener('dblclick', () => {
+                noteEl.classList.add('editing');
+                textEl.contentEditable = 'true';
+                textEl.focus();
+                document.execCommand('selectAll', false, null);
+            });
+            // 失去焦点或回车结束编辑
+            textEl.addEventListener('blur', () => {
+                textEl.contentEditable = 'false';
+                noteEl.classList.remove('editing');
+            });
+            textEl.addEventListener('keydown', e => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    textEl.blur();
+                }
+            });
+
+            // 删除按钮
+            const delBtn = document.createElement('button');
+            delBtn.className = 'delete-btn';
+            delBtn.innerHTML = '&times;';
+            delBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                noteEl.remove();
+            });
+
+            // 拖拽排序
+            noteEl.addEventListener('dragstart', e => {
+                dragSrcEl = noteEl;
+                e.dataTransfer.effectAllowed = 'move';
+                noteEl.classList.add('dragging');
+            });
+            noteEl.addEventListener('dragend', () => {
+                noteEl.classList.remove('dragging');
+            });
+            noteEl.addEventListener('dragover', e => {
+                e.preventDefault();
+                noteEl.classList.add('drag-over');
+            });
+            noteEl.addEventListener('dragleave', () => {
+                noteEl.classList.remove('drag-over');
+            });
+            noteEl.addEventListener('drop', e => {
+                e.stopPropagation();
+                noteEl.classList.remove('drag-over');
+                if (dragSrcEl && dragSrcEl !== noteEl) {
+                    notesList.insertBefore(dragSrcEl, noteEl);
+                }
+            });
+
+            // 组装
+            noteEl.appendChild(textEl);
+            noteEl.appendChild(delBtn);
+            return noteEl;
+        }
+
+        // “＋ 新建” 按钮逻辑保持不变
+        document.getElementById('add-note').addEventListener('click', () => {
+            const note = createNote();
+            notesList.appendChild(note);
+        });
+
+
+    </script>
+
+    <!-- 事件编辑模态窗 -->
+    <div id="event-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>新建事件</h3>
+            <label>
+                名称：
+                <input type="text" id="evt-title" placeholder="事件名称" />
+            </label>
+            <label>
+                强调色：
+                <div id="color-picker">
+                    <button type="button" class="color-btn" data-color="#f87171" style="background:#f87171"></button>
+                    <button type="button" class="color-btn" data-color="#60a5fa" style="background:#60a5fa"></button>
+                    <button type="button" class="color-btn" data-color="#34d399" style="background:#34d399"></button>
+                    <!-- 调色盘 -->
+                    <input type="color" id="evt-color" class="color-btn" value="#f87171" />
+                </div>
+            </label>
+
+
+            <label>
+                开始时间：
+                <input type="time" id="evt-start" />
+            </label>
+            <label>
+                结束时间：
+                <input type="time" id="evt-end" />
+            </label>
+            <label>
+                备注：
+                <textarea id="evt-desc" rows="3" placeholder="事件备注"></textarea>
+            </label>
+            <div class="modal-actions">
+                <button id="evt-cancel">取消</button>
+                <button id="evt-confirm">确定</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
