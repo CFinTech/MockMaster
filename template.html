@@ -1,287 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accelerate Your Career · Career.io</title>
-    <style>
-        /* Global Styles */
-        * {
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: Arial, sans-serif;
-            background: #f9fafb;
-            color: #333;
-        }
-
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Styles */
-        #sidebar {
-            width: 240px;
-            background: #fff;
-            border-right: 1px solid #e5e7eb;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .logo {
-            font-size: 1.2em;
-            font-weight: 700;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo::before {
-            content: "";
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            background: #6366f1;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .profile-section {
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #f97316;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8em;
-            font-weight: 600;
-            margin-right: 10px;
-        }
-
-        .profile-info .name {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .profile-info .role {
-            font-size: 0.85em;
-            color: #888;
-        }
-
-        .menu {
-            list-style: none;
-            margin: 20px 0;
-            padding: 0;
-        }
-
-        .menu li {
-            margin: 5px 0;
-        }
-
-        .menu li a {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            padding: 8px 16px;
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            border-radius: 4px;
-            white-space: nowrap;
-        }
-
-        .menu li a:hover {
-            background: #f0f4f8;
-        }
-
-        .menu li.active a {
-            background: #e7f0fe;
-            color: #265ed4;
-            font-weight: 600;
-        }
-
-        .menu-item-label {
-            display: flex;
-            align-items: center;
-        }
-
-        .menu-item-label::before {
-            content: "";
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background: #9ca3af;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .menu li.active .menu-item-label::before {
-            background: #265ed4;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 2px 6px;
-            font-size: 0.75em;
-            font-weight: 600;
-            border-radius: 12px;
-            background: #e0e7ff;
-            color: #265ed4;
-        }
-
-        .sidebar-footer {
-            background: #f9fafb;
-            padding: 10px;
-            margin: 16px;
-            text-align: center;
-            border-radius: 4px;
-        }
-
-        .sidebar-footer a {
-            color: inherit;
-            text-decoration: none;
-            display: block;
-            font-size: 0.9em;
-        }
-
-        .sidebar-footer:hover {
-            background: #f0f4f8;
-            cursor: pointer;
-        }
-
-        /* Main Content Styles */
-        .main-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: #f9fafb;
-        }
-
-        .topbar {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            background: #fff;
-        }
-
-        .topbar .topnav {
-            display: flex;
-            gap: 20px;
-            flex: 1;
-            justify-content: flex-end;
-        }
-
-        .topbar nav {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .topbar nav a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .topbar nav a:hover {
-            color: #000;
-        }
-
-        .upgrade-btn {
-            background: #6366f1;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-left: 20px;
-        }
-
-        .upgrade-btn:hover {
-            background: #5056c7;
-        }
-
-        #main-content {
-            flex: 1;
-            padding: 20px;
-
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <!-- Sidebar -->
-        <aside id="sidebar">
-            <div class="sidebar-content">
-                <!-- Logo -->
-                <div class="logo">career.io</div>
-                <!-- Profile Section -->
-                <div class="profile-section">
-                    <div class="avatar">5%</div>
-                    <div class="profile-info">
-                        <div class="name">add sub</div>
-                        <div class="role">Set your target role</div>
-                    </div>
+<!-- template.html -->
+<div class="container">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <div class="sidebar-content">
+            <div class="logo">career.io</div>
+            <div class="profile-section">
+                <div class="avatar">5%</div>
+                <div class="profile-info">
+                    <div class="name">add sub</div>
+                    <div class="role">Set your target role</div>
                 </div>
-                <!-- Menu -->
-                <ul class="menu">
-                    <li class="active"><a href="#"><span class="menu-item-label">Interview Prepare</span></a></li>
-                    <!--主页面-->
-                    <li><a href="#"><span class="menu-item-label">Mock Interview</span></a></li>
-                    <li><a href="#"><span class="menu-item-label">Resumes</span></a></li>
-                    <li><a href="#"><span class="menu-item-label">Job Tracker</span></a></li>
-                    <li><a href="#"><span class="menu-item-label">Calendar</span></a></li>
-                    <!-- <li><a href="#"><span class="menu-item-label">Interview Prep</span></a></li>
-                    <li><a href="#"><span class="menu-item-label">Salary Analyzer</span></a></li>
-                    <li><a href="#"><span class="menu-item-label">Resume Distribution</span> <span
-                                class="badge">200</span></a></li>
-                    <li><a href="#"><span class="menu-item-label">Job Search Method</span></a></li>
-                    <li><a href="#"><span class="menu-item-label">Coaching</span></a></li>
-                    <li><a href="#"><span class="menu-item-label">Other</span></a></li> -->
-                </ul>
             </div>
-            <!-- Sidebar Footer (Call to Action) -->
-            <!-- <div class="sidebar-footer">
-                <a href="#">Get Auto Apply Extension</a>
-            </div> -->
-        </aside>
-        <!-- Main Content Area -->
-        <div class="main-section">
-            <!-- Top Navigation Bar -->
-            <header class="topbar">
-                <nav class="topnav">
-                    <a href="#">Contact Us</a>
-                    <!-- <a href="#">Excel at Your Job</a>
-                    <a href="#">Switch Career</a> -->
-                </nav>
-                <button class="upgrade-btn">Upgrade Now</button>
-            </header>
-            <!-- Main Content Placeholder -->
-            <main id="main-content">
-                <!-- Content will go here -->
-            </main>
+            <ul class="menu">
+                <li class="active">
+                    <a href="#"><span class="menu-item-label">Interview Prepare</span></a>
+                </li>
+                <li><a href="#"><span class="menu-item-label">Mock Interview</span></a></li>
+                <li><a href="#"><span class="menu-item-label">Resumes</span></a></li>
+                <li><a href="#"><span class="menu-item-label">Job Tracker</span></a></li>
+                <li><a href="#"><span class="menu-item-label">Calendar</span></a></li>
+            </ul>
         </div>
-    </div>
-</body>
+    </aside>
 
-</html>
+    <!-- Main + Topbar -->
+    <div class="main-section">
+        <header class="topbar">
+            <nav class="topnav">
+                <a href="#">Contact Us</a>
+            </nav>
+            <button class="upgrade-btn">Upgrade Now</button>
+        </header>
+        <!-- 业务内容挂在这里 -->
+        <main id="main-content"></main>
+    </div>
+</div>
