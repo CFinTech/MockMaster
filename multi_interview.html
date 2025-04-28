@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>群体面试模拟</title>
+    <link rel="stylesheet" href="multi_interview.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- 顶部导航栏 -->
+      <div class="top-nav">
+        <a href="#" class="back-button">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 12H5M5 12L12 19M5 12L12 5"
+              stroke="#4CAF50"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          返回主页
+        </a>
+        <div class="user-profile">
+          <span class="user-name">张小明</span>
+          <div class="user-avatar">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="12" cy="8" r="4" fill="#4CAF50" />
+              <path
+                d="M5.33788 18.3206C5.99897 15.5269 8.77173 14 11.6426 14H12.3574C15.2283 14 18.001 15.5269 18.6621 18.3206C18.79 18.8611 18.8917 19.4268 18.9489 20.0016C18.9825 20.3343 18.7117 20.6084 18.3776 20.5528C15.855 20.1357 13.073 20 12 20C10.927 20 8.14501 20.1357 5.62236 20.5528C5.28835 20.6084 5.0175 20.3343 5.0511 20.0016C5.1083 19.4268 5.20997 18.8611 5.33788 18.3206Z"
+                fill="#4CAF50"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <!-- 左侧视频区域 -->
+        <div class="video-section">
+          <div class="section-header">群体面试 - 6人参与</div>
+          <div class="video-grid" id="video-grid">
+            <!-- 视频项会动态生成 -->
+            <div class="video-item">
+              <video autoplay playsinline></video>
+              <div class="participant-info">
+                <div class="participant-avatar">张</div>
+                <span>张小明 (您)</span>
+              </div>
+            </div>
+            <div class="video-item">
+              <video autoplay playsinline></video>
+              <div class="participant-info">
+                <div class="participant-avatar">王</div>
+                <span>王丽</span>
+              </div>
+            </div>
+            <div class="video-item">
+              <video autoplay playsinline></video>
+              <div class="participant-info">
+                <div class="participant-avatar">李</div>
+                <span>李强</span>
+              </div>
+            </div>
+            <div class="video-item">
+              <video autoplay playsinline></video>
+              <div class="participant-info">
+                <div class="participant-avatar">赵</div>
+                <span>赵敏</span>
+              </div>
+            </div>
+            <div class="video-item">
+              <video autoplay playsinline></video>
+              <div class="participant-info">
+                <div class="participant-avatar">刘</div>
+                <span>刘伟</span>
+              </div>
+            </div>
+            <div class="video-item">
+              <video autoplay playsinline></video>
+              <div class="participant-info">
+                <div class="participant-avatar">陈</div>
+                <span>陈芳</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧聊天区域 -->
+        <div class="chat-section">
+          <div class="section-header">群聊</div>
+          <div class="chat-messages" id="chat-messages">
+            <div class="message">
+              <div class="message-header">
+                <div class="message-avatar">王</div>
+                <span class="message-sender">王丽</span>
+                <span class="message-time">10:23</span>
+              </div>
+              <div class="message-content">
+                大家好，我是王丽，很高兴参加这次群面！
+              </div>
+            </div>
+            <div class="message">
+              <div class="message-header">
+                <div class="message-avatar">李</div>
+                <span class="message-sender">李强</span>
+                <span class="message-time">10:24</span>
+              </div>
+              <div class="message-content">
+                大家好，我是李强，期待与各位合作完成今天的面试任务
+              </div>
+            </div>
+            <div class="message">
+              <div class="message-header">
+                <div class="message-avatar">张</div>
+                <span class="message-sender">张小明</span>
+                <span class="message-time">10:25</span>
+              </div>
+              <div class="message-content">
+                大家好，我是张小明，很高兴认识各位
+              </div>
+            </div>
+          </div>
+          <div class="chat-input">
+            <form class="chat-form" id="chat-form">
+              <input
+                type="text"
+                class="chat-input-field"
+                placeholder="输入消息..."
+              />
+              <button type="submit" class="send-button">发送</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- AI分析区域 -->
+        <div class="ai-analysis-section">
+          <div class="analysis-header">AI面试反馈</div>
+          <div class="ai-feedback" id="analysis-content">
+            <!-- AI分析结果会动态生成 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部控制栏 -->
+      <div class="controls">
+        <button id="start-camera" class="control-btn">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"
+              fill="white"
+            />
+            <path
+              d="M12 3V5"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M12 19V21"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M5 12H3"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M21 12H19"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M16.95 7.05005L15.54 5.64005"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M8.46 18.36L7.05 16.95"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M7.05 7.05005L8.46 5.64005"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M15.54 18.36L16.95 16.95"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          开启摄像头
+        </button>
+        <button id="stop-camera" class="control-btn stop disabled" disabled>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 12H18"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          关闭摄像头
+        </button>
+        <button id="analyze-btn" class="control-btn">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
+              fill="white"
+            />
+            <path
+              d="M19.4 15C19.2669 15.3016 19.2167 15.6362 19.256 15.9656C19.2952 16.295 19.4224 16.6058 19.6226 16.8616C19.8228 17.1174 20.0876 17.3073 20.383 17.408C20.6785 17.5088 20.9919 17.5162 21.292 17.43C21.5921 17.3437 21.8655 17.1673 22.0766 16.9224C22.2878 16.6775 22.4274 16.3747 22.478 16.05C22.576 15.45 22.576 14.85 22.478 14.25C22.4274 13.9253 22.2878 13.6225 22.0766 13.3776C21.8655 13.1327 21.5921 12.9563 21.292 12.87C20.9919 12.7838 20.6785 12.7912 20.383 12.892C20.0876 12.9927 19.8228 13.1826 19.6226 13.4384C19.4224 13.6942 19.2952 14.005 19.256 14.3344C19.2167 14.6638 19.2669 14.9984 19.4 15.3"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M4.6 15C4.73315 15.3016 4.78334 15.6362 4.744 15.9656C4.70466 16.295 4.57759 16.6058 4.37741 16.8616C4.17723 17.1174 3.91244 17.3073 3.61697 17.408C3.3215 17.5088 3.00815 17.5162 2.70803 17.43C2.40792 17.3437 2.13453 17.1673 1.92337 16.9224C1.71221 16.6775 1.5726 16.3747 1.52203 16.05C1.42403 15.45 1.42403 14.85 1.52203 14.25C1.5726 13.9253 1.71221 13.6225 1.92337 13.3776C2.13453 13.1327 2.40792 12.9563 2.70803 12.87C3.00815 12.7838 3.3215 12.7912 3.61697 12.892C3.91244 12.9927 4.17723 13.1826 4.37741 13.4384C4.57759 13.6942 4.70466 14.005 4.744 14.3344C4.78334 14.6638 4.73315 14.9984 4.6 15.3"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M15 19.4C15.3016 19.2669 15.6362 19.2167 15.9656 19.256C16.295 19.2952 16.6058 19.4224 16.8616 19.6226C17.1174 19.8228 17.3073 20.0876 17.408 20.383C17.5088 20.6785 17.5162 20.9919 17.43 21.292C17.3437 21.5921 17.1673 21.8655 16.9224 22.0766C16.6775 22.2878 16.3747 22.4274 16.05 22.478C15.45 22.576 14.85 22.576 14.25 22.478C13.9253 22.4274 13.6225 22.2878 13.3776 22.0766C13.1327 21.8655 12.9563 21.5921 12.87 21.292C12.7838 20.9919 12.7912 20.6785 12.892 20.383C12.9927 20.0876 13.1826 19.8228 13.4384 19.6226C13.6942 19.4224 14.005 19.2952 14.3344 19.256C14.6638 19.2167 14.9984 19.2669 15.3 19.4"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M9 4.6C9.30161 4.73315 9.63623 4.78334 9.96558 4.744C10.2949 4.70466 10.6058 4.57759 10.8616 4.37741C11.1174 4.17723 11.3073 3.91244 11.408 3.61697C11.5088 3.3215 11.5162 3.00815 11.43 2.70803C11.3437 2.40792 11.1673 2.13453 10.9224 1.92337C10.6775 1.71221 10.3747 1.5726 10.05 1.52203C9.45003 1.42403 8.85003 1.42403 8.25003 1.52203C7.92535 1.5726 7.62253 1.71221 7.37762 1.92337C7.13272 2.13453 6.95628 2.40792 6.87003 2.70803C6.78378 3.00815 6.79119 3.3215 6.89197 3.61697C6.99274 3.91244 7.18265 4.17723 7.43843 4.37741C7.69421 4.57759 8.005 4.70466 8.33437 4.744C8.66375 4.78334 8.99837 4.73315 9.30003 4.6"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          <span class="analyze-btn-text">开启AI分析</span>
+        </button>
+      </div>
+
+      <!-- 底部栏 -->
+      <div class="footer">
+        <div class="footer-links">
+          <a href="#" class="footer-link">关于我们</a>
+          <a href="#" class="footer-link">隐私政策</a>
+          <a href="#" class="footer-link">使用条款</a>
+        </div>
+        <div class="copyright">© 2025 AI面试助手 | 由智能人机交互团队制作</div>
+        <div class="version">v1.0.0</div>
+      </div>
+    </div>
+
+    <script src="multi_interview.js"></script>
+  </body>
+</html>

@@ -83,7 +83,7 @@ function updateCameraStatus(status) {
 
 // 开始分析
 function startAnalysis() {
-  analyzeBtn.textContent = "停止AI分析";
+  analyzeBtn.querySelector(".analyze-btn-text").textContent = "停止AI分析";
   analyzeBtn.style.backgroundColor = "#f44336";
   analysisIndicator.textContent = "AI分析: 已开启";
 
@@ -107,7 +107,7 @@ function stopAnalysis() {
   if (analysisInterval) {
     clearInterval(analysisInterval);
     analysisInterval = null;
-    analyzeBtn.textContent = "开启AI分析";
+    analyzeBtn.querySelector(".analyze-btn-text").textContent = "开启AI分析";
     analyzeBtn.style.backgroundColor = "#4CAF50";
     analysisIndicator.textContent = "AI分析: 准备就绪";
   }
