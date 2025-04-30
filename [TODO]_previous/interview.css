@@ -30,7 +30,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 12px 24px;
-  background-color: white;
+  background-color: #f9f9f9;
   border-bottom: 1px solid #eee;
   z-index: 100;
 }
@@ -120,8 +120,10 @@ body {
   justify-content: center;
   align-items: center;
   background-color: #000;
+  border-radius: 8px;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #camera-view {
@@ -140,6 +142,10 @@ body {
 }
 
 .control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 10px 20px;
   background-color: #4caf50;
   color: white;
@@ -179,13 +185,14 @@ body {
 }
 
 .content {
-  padding: 20px;
+  padding-left: 20px;
   flex: 1;
   overflow-y: auto;
+  background-color: #f9f9f9;
 }
 
 .ai-feedback {
-  background-color: #f9f9f9;
+  background-color: white;
   border-radius: 8px;
   padding: 20px;
   margin-top: 0;
