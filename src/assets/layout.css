@@ -1,0 +1,407 @@
+/* layout.css */
+/* Global */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background: #f9fafb;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+#sidebar {
+    width: 240px;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 1.2em;
+    font-weight: 700;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.logo::before {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: #6366f1;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.profile-section {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f97316;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.profile-info .name {
+    font-weight: 600;
+    color: #333;
+}
+
+.profile-info .role {
+    font-size: 0.85em;
+    color: #888;
+}
+
+.menu {
+    list-style: none;
+    margin: 20px 0;
+    padding: 0;
+}
+
+.menu li {
+    margin: 5px 0;
+}
+
+.menu li a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.menu li a:hover {
+    background: #f0f4f8;
+}
+
+.menu li.active a {
+    background: #e7f0fe;
+    color: #265ed4;
+    font-weight: 600;
+}
+
+.menu-item-label {
+    display: flex;
+    align-items: center;
+}
+
+.menu-item-label::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #9ca3af;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.menu li.active .menu-item-label::before {
+    background: #265ed4;
+}
+
+.badge {
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 0.75em;
+    font-weight: 600;
+    border-radius: 12px;
+    background: #e0e7ff;
+    color: #265ed4;
+}
+
+/* Main area */
+.main-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f9fafb;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background: #fff;
+}
+
+.topbar .topnav {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.topbar nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.topbar nav a:hover {
+    color: #000;
+}
+
+.upgrade-btn {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.upgrade-btn:hover {
+    background: #5056c7;
+}
+
+#main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* resume */
+/* layout.css */
+/* =========== 全局 & 布局 =========== */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background: #f9fafb;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* sidebar、topbar 样式沿用之前，不再赘述… */
+/* ==================================== */
+
+/* =========== 本页 Resumes & Cover Letters =========== */
+.resumes-page .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.resumes-page .page-header h1 {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin: 0;
+}
+
+.resumes-page .tabs {
+    display: flex;
+    gap: 10px;
+}
+
+.resumes-page .tab {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    font-size: 1em;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.resumes-page .tab.active {
+    border-color: #6366f1;
+    color: #6366f1;
+    font-weight: 600;
+}
+
+.resumes-page .create-btn {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.resumes-page .create-btn:hover {
+    background: #5056c7;
+}
+
+.resumes-page .banner {
+    display: flex;
+    align-items: center;
+    background: #e7f0fe;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.resumes-page .banner-icon {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    margin-right: 16px;
+}
+
+.resumes-page .banner-content {
+    flex: 1;
+}
+
+.resumes-page .banner-title {
+    font-weight: 600;
+    margin: 0;
+}
+
+.resumes-page .banner-subtitle {
+    margin: 4px 0 0;
+    color: #555;
+}
+
+.resumes-page .start-btn {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 16px;
+}
+
+.resumes-page .start-btn:hover {
+    background: #5056c7;
+}
+
+.resumes-page .resume-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.resumes-page .card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 16px;
+}
+
+.resumes-page .resume-card .card-img {
+    width: 100%;
+    height: 120px;
+    background: #f0f4f8;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+
+.resumes-page .resume-card .card-body h2 {
+    margin: 0 0 4px;
+    font-size: 1.1em;
+}
+
+.resumes-page .resume-card .updated {
+    font-size: 0.85em;
+    color: #888;
+    margin: 0 0 8px;
+}
+
+.resumes-page .score-badge {
+    background: #e0e7ff;
+    color: #265ed4;
+    padding: 4px 8px;
+    font-size: 0.75em;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+.resumes-page .actions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.resumes-page .action-btn {
+    background: none;
+    border: none;
+    color: #265ed4;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95em;
+    padding: 0;
+}
+
+.resumes-page .new-badge {
+    background: #e0e7ff;
+    color: #265ed4;
+    padding: 2px 4px;
+    font-size: 0.7em;
+    border-radius: 8px;
+    margin-left: 4px;
+}
+
+.resumes-page .new-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 0.95em;
+    text-align: center;
+    gap: 12px;
+}
+
+.resumes-page .new-icon {
+    width: 60px;
+    height: 60px;
+    border: 2px dashed #ccc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    color: #ccc;
+}
