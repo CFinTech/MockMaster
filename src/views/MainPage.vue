@@ -9,8 +9,6 @@
           <i class="i-badge" aria-hidden="true">🔷</i>
         </a>
       </h1>
-
-      <!-- 进度指示 -->
       <div
         class="progress-wrap"
         @mouseenter="tooltipOpen = true"
@@ -145,9 +143,11 @@
 </template>
   
   <script setup>
-import { ref, computed, defineComponent } from "vue";
+import { ref, computed } from "vue";
+import InterviewCard from "../components/InterviewCard.vue";
+import MiniCard from "../components/MiniCard.vue";
+import ModalOption from "../components/ModalOption.vue";
 
-/* —— 状态 & 数据 —— */
 const total = 4;
 const done = ref(0);
 const tooltipOpen = ref(false);
@@ -188,14 +188,12 @@ const tab = ref("progress");
 const modalOpen = ref(false);
 const modalType = ref("question");
 
-/* —— 计算属性 —— */
 const progressOffset = computed(() => {
   const ratio = done.value / total;
   return 125.6 * (1 - ratio);
 });
 const doneCards = computed(() => cards.value.filter((c) => c.done));
 
-/* —— 操作 —— */
 function markDone(card) {
   if (!card.done) {
     card.done = true;
@@ -207,7 +205,6 @@ function confirmCreate() {
   modalOpen.value = false;
 }
 
-/* —— 下方示例数据 —— */
 const skillCards = [
   {
     id: 11,
@@ -261,69 +258,8 @@ const realCards = [
     icon: "",
   },
 ];
-
-/* —— 子组件 —— */
-// 主要卡片
-const InterviewCard = defineComponent({
-  name: "InterviewCard",
-  props: { card: Object },
-  emits: ["done"],
-  setup(props, { emit }) {
-    const flipped = ref(false);
-    function flip() {
-      flipped.value = !flipped.value;
-    }
-    function doneIt() {
-      emit("done", props.card);
-      flipped.value = false;
-    }
-    return { flipped, flip, doneIt };
-  },
-  template: `
-      <div
-        class="big-card"
-        :class="[card.kind, { flipped }]"
-        @click="flip"
-        tabindex="0"
-      >
-        <div class="side front">
-          <span class="duration">⏱ {{card.duration}} min</span>
-          <span class="tag">{{ card.kind==='question'?'Question':'Interview' }}</span>
-          <p class="summary">{{ card.title }}</p>
-        </div>
-        <div class="side back">
-          <button class="primary full" @click.stop="doneIt">Start practice</button>
-        </div>
-      </div>
-    `,
-});
-
-// 小卡片
-const MiniCard = defineComponent({
-  name: "MiniCard",
-  props: { card: Object },
-  template: `
-      <div class="mini-card" :class="card.kind">
-        <span class="duration">⏱ {{card.duration}} min</span>
-        <span class="tag">{{ card.kind==='question'?'Question':'Interview' }}</span>
-        <div class="icon" v-if="card.icon">{{card.icon}}</div>
-        <p class="summary">{{card.title}}</p>
-      </div>
-    `,
-});
-
-// 弹框选项
-const ModalOption = defineComponent({
-  name: "ModalOption",
-  props: { type: String, active: Boolean },
-  emits: ["select"],
-  template: `
-      <div class="modal-option" :class="{active}" @click="$emit('select')">
-        <div class="plus">+</div>
-        <h4>{{ type==='question'?'Question':'Interview' }}</h4>
-      </div>
-    `,
-});
 </script>
-
-<style src="../assets/mainpage.css"></style>;
+  
+  <style src="../assets/layout.css"></style>
+  <style src="../assets/mainpage.css"></style>
+  
