@@ -1,0 +1,359 @@
+/* =========== 本页样式：resumes.css =========== */
+
+/* 基本排版 & 字体 */
+.resumes-page {
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+    color: #2c2c2c;
+    padding: 0 16px 40px;
+}
+
+/* 页眉 */
+.resumes-page .page-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 24px 0 16px;
+}
+
+.resumes-page .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Create New 按钮 */
+.resumes-page .create-btn {
+    background: linear-gradient(135deg, #506ef9, #6b43ff);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(80, 110, 249, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.resumes-page .create-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(80, 110, 249, 0.3);
+}
+
+/* Tabs */
+.resumes-page .tabs {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 24px;
+}
+
+.resumes-page .tab {
+    background: none;
+    border: none;
+    padding: 6px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.resumes-page .tab.active {
+    color: #2c2c2c;
+    font-weight: 600;
+}
+
+.resumes-page .tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #506ef9;
+    border-radius: 2px;
+}
+
+/* Banner */
+.banner {
+    display: flex;
+    align-items: center;
+    background: #f0f4ff;
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin-bottom: 32px;
+}
+
+.banner-icon {
+    width: 48px;
+    height: 48px;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-right: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.banner-content .banner-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.banner-content .banner-subtitle {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.start-btn {
+    margin-left: auto;
+    background: #506ef9;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(80, 110, 249, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(80, 110, 249, 0.3);
+}
+
+/* 卡片区域：两卡水平居中 */
+.resume-grid-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.resume-grid {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: center;
+    gap: 48px;
+}
+
+/* 卡片基座 + 悬浮 */
+.card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* 已有简历卡片 */
+.resume-card {
+    display: flex;
+    padding: 16px;
+}
+
+.resume-card .thumbnail {
+    width: 100px;
+    height: 140px;
+    background: #f5f7ff;
+    border-radius: 8px;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.resume-card .info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.resume-card .info .title {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.resume-card .info .title .icon-pencil {
+    font-size: 16px;
+    margin-left: 8px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.resume-card .info .title .icon-pencil:hover {
+    color: #506ef9;
+}
+
+.resume-card .info .updated {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 12px;
+}
+
+.resume-card .info .score-badge {
+    background: #ffecec;
+    color: #d9534f;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.resume-card .info .actions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.resume-card .info .action-btn {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #506ef9;
+    font-size: 15px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.resume-card .info .action-btn:hover {
+    color: #3a58c4;
+}
+
+.resume-card .info .action-btn .icon {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.resume-card .info .new-badge {
+    background: #e0f0ff;
+    color: #506ef9;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-left: 6px;
+}
+
+/* 新建卡片 + 弹出菜单 */
+.new-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    position: relative;
+    /* 为弹出菜单提供定位上下文 */
+    min-width: 260px;
+    /* 调大卡片宽度 */
+    min-height: 260px;
+    /* 调大卡片高度 */
+}
+
+.new-card .new-icon {
+    font-size: 56px;
+    color: #ccc;
+    margin-bottom: 16px;
+    transition: color 0.2s ease, transform 0.3s ease;
+}
+
+.new-card .new-icon.open {
+    transform: rotate(45deg);
+    color: #506ef9;
+}
+
+.new-card .new-text {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.new-card .new-desc {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* 弹出菜单 */
+.new-menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(20px, -50%);
+    /* 往右偏一点 */
+    width: 300px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    z-index: 10;
+}
+
+.new-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.new-menu-item+.new-menu-item {
+    border-top: 1px solid #eee;
+}
+
+.new-menu-item:hover {
+    background: #f5f5f5;
+}
+
+.new-menu-item .menu-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: #f5f7ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #506ef9;
+    margin-right: 12px;
+}
+
+.new-menu-item .menu-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.new-menu-item .menu-text .title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c2c2c;
+}
+
+.new-menu-item .menu-text .desc {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+}

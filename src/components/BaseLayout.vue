@@ -57,7 +57,3 @@ const pageClass = computed(() => {
 });
 </script>
   
-  <style scoped>
-@import "../assets/layout.css";
-</style>
-  

@@ -2,7 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // 以下几个 view 只是示例，你可以按需改名、新建
-// import Home from '../views/Home.vue'
+import Home from '../views/MainPage.vue'
 // import MockInterview from '../views/MockInterview.vue'
 import Resumes from '../views/Resume.vue'
 // import JobTracker from '../views/JobTracker.vue'
@@ -10,7 +10,7 @@ import Resumes from '../views/Resume.vue'
 // import Contact from '../views/Contact.vue'
 
 const routes = [
-    // { path: '/', component: Home },
+    { path: '/', component: Home },
     // { path: '/mock', component: MockInterview },
     { path: '/resumes', component: Resumes },
     // { path: '/tracker', component: JobTracker },
