@@ -1,0 +1,262 @@
+/* ====== 布局 ====== */
+.builder-page {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+}
+
+.form-pane {
+    width: 50%;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.preview-pane {
+    width: 50%;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* ====== 顶部进度 ====== */
+.top-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.score-text {
+    font-size: 14px;
+    color: #555;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: #ff6b6b;
+    transition: width .3s;
+}
+
+.pct-text {
+    width: 40px;
+    text-align: right;
+    font-size: 14px;
+    color: #333;
+}
+
+/* ====== 卡片容器 ====== */
+.section-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+}
+
+.section-card h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+}
+
+.sub {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+/* ====== 表单控件 ====== */
+label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+label span {
+    margin-bottom: 6px;
+    color: #444;
+}
+
+input,
+textarea {
+    padding: 10px 12px;
+    border: 1px solid #dce0e6;
+    border-radius: 6px;
+    background: #f5f7fa;
+    font-size: 14px;
+    outline: none;
+    transition: border .2s, background .2s;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #1976ff;
+    background: #fff;
+}
+
+textarea {
+    min-height: 80px;
+}
+
+/* 二列布局 */
+.two-col {
+    display: flex;
+    gap: 16px;
+}
+
+/* Add more details */
+.more-btn {
+    background: none;
+    border: none;
+    color: #1976ff;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 12px 0;
+}
+
+.arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+.arrow.down {
+    border-top: 6px solid #1976ff;
+}
+
+.arrow.up {
+    border-bottom: 6px solid #1976ff;
+}
+
+.optional {
+    margin-top: 16px;
+}
+
+/* Employment Block */
+.job-block {
+    border: 1px solid #dce0e6;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background: #fafafa;
+}
+
+.job-head {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.job-head .title {
+    flex: 1;
+    font-weight: 600;
+    color: #1976ff;
+}
+
+.del {
+    background: none;
+    border: none;
+    color: #d9534f;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.date-pair {
+    display: flex;
+    gap: 8px;
+}
+
+/* Add job btn */
+.add-btn {
+    background: #1976ff;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.add-btn:hover {
+    background: #155ec9;
+}
+
+/* ====== 预览样式 ====== */
+.resume {
+    background: #fff;
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.resume-header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.resume-header h3 {
+    margin: 6px 0;
+    color: #666;
+    font-size: 16px;
+}
+
+.contacts {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.resume-employment h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.resume-job {
+    margin-bottom: 16px;
+}
+
+.job-line {
+    font-weight: 600;
+    color: #333;
+}
+
+.meta {
+    font-size: 12px;
+    color: #888;
+    margin: 4px 0;
+}
+
+.bullets {
+    padding-left: 18px;
+    margin: 0;
+}
+
+.bullets li {
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+/* 淡入淡出 */
+.fade-enter-active,
+.fade-leave-active {
+    transition: all .3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    transform: translateY(-6px);
+}
