@@ -1,5 +1,3 @@
-/* calendar.css */
-/* ——— 全局 Reset ——— */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -15,14 +13,13 @@ body {
     color: #333;
 }
 
-/* 容器布局 */
 .container {
     display: flex;
     min-height: 100vh;
     width: 100%;
 }
 
-/* Sidebar */
+/* Sidebar (与 template 统一) */
 #sidebar {
     width: 240px;
     background: #fff;
@@ -105,7 +102,7 @@ body {
     font-weight: 600;
 }
 
-/* Topbar */
+/* Top Navigation (与 template 统一) */
 .main-section {
     display: flex;
     flex-direction: column;
@@ -125,6 +122,12 @@ body {
     gap: 20px;
     flex: 1;
     justify-content: flex-end;
+}
+
+.topbar nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 .topbar nav a {
@@ -152,7 +155,7 @@ body {
     background: #5056c7;
 }
 
-/* 主内容 & 布局 */
+/* Main Content & Layout */
 #main-content {
     flex: 1;
     display: flex;
@@ -168,7 +171,7 @@ body {
     gap: 20px;
 }
 
-/* 月视图 */
+/* Calendar Month View */
 #calendar-container {
     flex: 1;
     display: flex;
@@ -197,6 +200,7 @@ body {
     font-size: 1.1em;
 }
 
+/* 周一–周日表头 */
 .day-names {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -226,17 +230,10 @@ body {
     padding: 4px;
     position: relative;
     cursor: pointer;
-    overflow: hidden;
 }
 
 .cal-cell:hover {
     background: #f0f4f8;
-}
-
-.cal-cell.today {
-    background-color: #eff6ff;
-    border: 2px solid #6366f1;
-    box-sizing: border-box;
 }
 
 .event {
@@ -261,26 +258,7 @@ body {
     background: #34d399;
 }
 
-.cell-events {
-    position: absolute;
-    top: 20px;
-    left: 4px;
-    right: 4px;
-    bottom: 4px;
-    display: flex;
-    flex-direction: column;
-    font-size: 0.75em;
-    line-height: 1.2em;
-    overflow: hidden;
-}
-
-.cell-events .event-name {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
-/* 日视图 */
+/* Daily View */
 #daily-view {
     flex: 1;
     display: none;
@@ -345,7 +323,7 @@ body {
     z-index: 10;
 }
 
-/* 便签侧栏 */
+/* Notes Sidebar */
 #notes-sidebar {
     flex: 0 0 200px;
     background: #fff;
@@ -353,6 +331,8 @@ body {
     padding: 10px;
     position: sticky;
     top: 0;
+
+    /* 占满整栏并垂直布局 */
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -384,18 +364,19 @@ body {
     cursor: move;
 }
 
-.note.editing {
-    box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.6);
-    background-color: #fffbdd;
-}
-
 .note-text[contenteditable="true"],
 .note-text:focus {
     outline: none !important;
     border: none !important;
 }
 
+.note.editing {
+    box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.6);
+    background-color: #fffbdd;
+}
+
 .delete-btn {
+    display: block;
     position: absolute;
     top: 4px;
     right: 4px;
@@ -407,7 +388,6 @@ body {
     line-height: 1;
 }
 
-/* 模态窗 */
 .modal {
     position: fixed;
     top: 0;
@@ -469,8 +449,21 @@ body {
     border-radius: 4px;
     cursor: pointer;
     opacity: 0.6;
+    vertical-align: middle;
     padding: 0;
     margin: 0;
+}
+
+.event-block {
+    position: absolute;
+    left: 50px;
+    right: 4px;
+    padding: 4px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.75em;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .color-btn.selected,
@@ -501,18 +494,6 @@ body {
     color: #fff;
 }
 
-.event-block {
-    position: absolute;
-    left: 50px;
-    right: 4px;
-    padding: 4px;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 0.75em;
-    box-sizing: border-box;
-    overflow: hidden;
-}
-
 .event-block .evt-title {
     font-weight: bold;
     display: block;
@@ -524,7 +505,35 @@ body {
     display: block;
 }
 
-/* 菜单图标 */
+.cal-cell {
+    overflow: hidden;
+}
+
+.cal-cell.today {
+    background-color: #eff6ff;
+    border: 2px solid #6366f1;
+    box-sizing: border-box;
+}
+
+.cell-events {
+    position: absolute;
+    top: 20px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.75em;
+    line-height: 1.2em;
+    overflow: hidden;
+}
+
+.cell-events .event-name {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 .menu-item-label {
     display: flex;
     align-items: center;
