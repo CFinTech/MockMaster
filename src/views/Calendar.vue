@@ -312,6 +312,6 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 @import '../assets/calendar.css';
 </style>
