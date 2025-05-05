@@ -80,8 +80,6 @@
 </template>
 
 <script>
-import '../assets/calendar.css';  // 根据你项目的结构调整路径
-
 export default {
     name: 'Calendar',
     mounted() {
@@ -313,3 +311,7 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+@import '../assets/calendar.css';
+</style>
