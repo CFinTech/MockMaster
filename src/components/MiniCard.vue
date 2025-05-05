@@ -17,4 +17,6 @@ const props = defineProps({
   },
 });
 </script>
+
+<style scoped src="../assets/mainpage.css"></style>
   

@@ -103,7 +103,7 @@ body {
 }
 
 /* Top Navigation (与 template 统一) */
-.main-section {
+.ca-main-section {
     display: flex;
     flex-direction: column;
     height: 100vh;

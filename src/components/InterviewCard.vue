@@ -43,3 +43,4 @@ function doneIt() {
 }
 </script>
   
+<style scoped src="../assets/mainpage.css"></style>

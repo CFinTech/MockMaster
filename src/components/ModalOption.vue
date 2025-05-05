@@ -23,4 +23,5 @@ const props = defineProps({
 });
 const emit = defineEmits(["select"]);
 </script>
-  
+
+<style scoped src="../assets/mainpage.css"></style>

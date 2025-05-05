@@ -1,3 +1,41 @@
+/* mainpage.css */
+
+#main-content {
+    /* 二次保险：保证内部也能 flex 布局 */
+    display: flex;
+    flex-direction: column;
+}
+
+.interview-page {
+    /* 撑满父容器剩余高度 */
+    flex: 1;
+
+    /* 启用垂直滚动 */
+    overflow-y: auto;
+
+    /* iOS 惯性滚动（可选） */
+    -webkit-overflow-scrolling: touch;
+}
+
+
+/* 在最顶部就加上： */
+#main-content {
+    /* 如果没在 layout.css 里加，或者想二次保险都可以放这里 */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* 外层隐藏溢出 */
+}
+
+.interview-page {
+    flex: 1;
+    /* 拉满父容器 #main-content */
+    overflow-y: auto;
+    /* 打开垂直滚动 */
+    -webkit-overflow-scrolling: touch;
+    /* iOS 惯性滚动 */
+}
+
 /* ─────────  变量  ───────── */
 :root {
     --blue: #1976ff;

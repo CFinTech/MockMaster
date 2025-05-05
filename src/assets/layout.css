@@ -146,6 +146,8 @@ body {
     display: flex;
     flex-direction: column;
     background: #f9fafb;
+    height: 100%;
+    overflow: hidden;
 }
 
 .topbar {
@@ -190,6 +192,7 @@ body {
 #main-content {
     flex: 1;
     padding: 20px;
+    overflow-y: auto;
 }
 
 /* resume */
