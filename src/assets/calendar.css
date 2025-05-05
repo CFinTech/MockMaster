@@ -1,0 +1,545 @@
+/* calendar.css */
+/* ——— 全局 Reset ——— */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    background: #f9fafb;
+    color: #333;
+}
+
+/* 容器布局 */
+.container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Sidebar */
+#sidebar {
+    width: 240px;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    font-size: 1.2em;
+    font-weight: 700;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.logo::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background: #6366f1;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.profile-section {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f97316;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.profile-info .name {
+    font-weight: 600;
+}
+
+.profile-info .role {
+    font-size: 0.85em;
+    color: #888;
+}
+
+.menu {
+    list-style: none;
+    margin: 20px 0;
+    padding: 0;
+}
+
+.menu li {
+    margin: 5px 0;
+}
+
+.menu li a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+.menu li.active a {
+    background: #e7f0fe;
+    color: #265ed4;
+    font-weight: 600;
+}
+
+/* Topbar */
+.main-section {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background: #fff;
+}
+
+.topbar .topnav {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.topbar nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.topbar nav a:hover {
+    color: #000;
+}
+
+.upgrade-btn {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.upgrade-btn:hover {
+    background: #5056c7;
+}
+
+/* 主内容 & 布局 */
+#main-content {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    padding: 20px;
+    overflow: auto;
+}
+
+.layout-flex {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
+
+/* 月视图 */
+#calendar-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.cal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.cal-header button {
+    background: transparent;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+#cal-title {
+    font-size: 1.1em;
+}
+
+.day-names {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+    background: #eef2f7;
+    color: #334155;
+}
+
+.day-names div {
+    padding: 8px 0;
+}
+
+#calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 1px;
+    background: #e5e7eb;
+    flex: 1;
+    width: 100%;
+}
+
+.cal-cell {
+    background: #fff;
+    padding: 4px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.cal-cell:hover {
+    background: #f0f4f8;
+}
+
+.cal-cell.today {
+    background-color: #eff6ff;
+    border: 2px solid #6366f1;
+    box-sizing: border-box;
+}
+
+.event {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    color: #fff;
+}
+
+.event-red {
+    background: #f87171;
+}
+
+.event-blue {
+    background: #60a5fa;
+}
+
+.event-green {
+    background: #34d399;
+}
+
+.cell-events {
+    position: absolute;
+    top: 20px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.75em;
+    line-height: 1.2em;
+    overflow: hidden;
+}
+
+.cell-events .event-name {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* 日视图 */
+#daily-view {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.daily-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.daily-back {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    color: #265ed4;
+}
+
+.daily-title {
+    font-size: 1.1em;
+}
+
+#daily-grid {
+    flex: 1;
+    position: relative;
+    border-top: 1px solid #e5e7eb;
+    width: 100%;
+}
+
+.time-slot {
+    height: 40px;
+    border-bottom: 1px solid #e5e7eb;
+    position: relative;
+}
+
+.time-label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 0.75em;
+    color: #888;
+    width: 40px;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.slot-content {
+    margin-left: 50px;
+    height: 100%;
+}
+
+.selecting {
+    background: rgba(100, 149, 237, 0.3);
+    position: absolute;
+    z-index: 10;
+}
+
+/* 便签侧栏 */
+#notes-sidebar {
+    flex: 0 0 200px;
+    background: #fff;
+    border-left: 1px solid #e5e7eb;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#add-note {
+    background: #265ed4;
+    color: #fff;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+#notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.note {
+    position: relative;
+    padding: 4px 28px 4px 4px;
+    background: #fffbcc;
+    border-radius: 4px;
+    cursor: move;
+}
+
+.note.editing {
+    box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.6);
+    background-color: #fffbdd;
+}
+
+.note-text[contenteditable="true"],
+.note-text:focus {
+    outline: none !important;
+    border: none !important;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: transparent;
+    border: none;
+    font-size: 1.2em;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* 模态窗 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 280px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h3 {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.modal-content label {
+    display: block;
+    margin: 8px 0;
+    font-size: 0.9em;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="time"],
+.modal-content textarea {
+    width: 100%;
+    padding: 4px 6px;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+#color-picker {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.color-btn,
+#evt-color {
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.6;
+    padding: 0;
+    margin: 0;
+}
+
+.color-btn.selected,
+#evt-color.selected {
+    outline: 2px solid #333;
+    opacity: 1;
+}
+
+.modal-actions {
+    text-align: right;
+    margin-top: 12px;
+}
+
+.modal-actions button {
+    padding: 6px 12px;
+    margin-left: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#evt-cancel {
+    background: #e5e7eb;
+}
+
+#evt-confirm {
+    background: #6366f1;
+    color: #fff;
+}
+
+.event-block {
+    position: absolute;
+    left: 50px;
+    right: 4px;
+    padding: 4px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.75em;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.event-block .evt-title {
+    font-weight: bold;
+    display: block;
+}
+
+.event-block .evt-desc {
+    font-size: 0.7em;
+    margin-top: 2px;
+    display: block;
+}
+
+/* 菜单图标 */
+.menu-item-label {
+    display: flex;
+    align-items: center;
+}
+
+.menu-item-label::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #9ca3af;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.menu li.active .menu-item-label::before {
+    background: #265ed4;
+}
