@@ -3,6 +3,8 @@ import Home from '../views/MainPage.vue'
 import Resume from '../views/Resume.vue'
 import SingleResume from '../views/SingleResume.vue'
 import Calendar from '../views/Calendar.vue'
+import Interview from '../views/Interview.vue'
+import MultiInterview from '../views/MultiInterview.vue'
 
 const routes = [
     {
@@ -22,7 +24,18 @@ const routes = [
         path: '/calendar',
         component: Calendar,
     },
+    {
+        path: '/interview',
+        component: Interview,
+        meta: { layout: false }   // 这一页不使用全局 layout
+    },
+    {
+        path: '/multi_interview',
+        component: MultiInterview,
+        meta: { layout: false }   // 这一页不使用全局 layout
+    },
 ]
+
 
 export default createRouter({
     history: createWebHistory(),
