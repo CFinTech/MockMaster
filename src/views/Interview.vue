@@ -32,12 +32,12 @@
           <canvas ref="overlay" class="overlay-canvas"></canvas>
         </div>
         <div class="camera-controls">
-          <button @click="toggleCamera" class="control-btn">开启摄像头</button>
+          <button @click="startCamera" class="control-btn">开启摄像头</button>
           <button @click="stopCamera" :disabled="!cameraOn" class="control-btn stop">
             关闭摄像头
           </button>
-          <button @click="triggerAnalysis" :disabled="!cameraOn">
-            {{ analysisReady ? "重新分析" : "开启 AI 分析" }}
+          <button @click="analyze" class="control-btn">
+            {{ analysisReady ? "重新分析" : "开启AI分析" }}
           </button>
         </div>
         <div class="status-indicator" v-if="cameraOn">摄像头已开启</div>
@@ -112,49 +112,17 @@ let animationFrameId = null;
 
 // Paths for MediaPipe Tasks Vision assets
 const MEDIAPIPE_TASKS_VISION_VERSION = "0.10.22-rc.20250304";
+const GESTURE_RECOGNIZER_TASK_URL =
+  "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task";
+const FACE_LANDMARKER_TASK_URL =
+  "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
 const VISION_WASM_URL_BASE = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_TASKS_VISION_VERSION}/wasm`;
-const GESTURE_RECOGNIZER_TASK_URL = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_TASKS_VISION_VERSION}/gesture_recognizer.task`;
-const FACE_LANDMARKER_TASK_URL = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_TASKS_VISION_VERSION}/face_landmarker.task`;
 
-// 新增：语音识别状态
-const transcript = ref("");
-const isRecognizing = ref(false);
-let recognition = null;
-
-/**
- * 原有：开启/关闭摄像头
- */
-async function toggleCamera() {
-  if (!cameraOn.value) {
-    // 打开摄像头
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-    cameraView.value.srcObject = stream;
-    await cameraView.value.play();
-    cameraOn.value = true;
-
-    // 初始化画布
-    overlayCtx = overlay.value.getContext("2d");
-    overlay.value.width = cameraView.value.videoWidth;
-    overlay.value.height = cameraView.value.videoHeight;
-  } else {
-    // 关闭摄像头
-    const tracks = cameraView.value.srcObject.getTracks();
-    tracks.forEach((t) => t.stop());
-    cameraOn.value = false;
-    cancelAnimationFrame(animationFrameId);
-    overlayCtx.clearRect(0, 0, overlay.value.width, overlay.value.height);
-  }
-}
-
-/**
- * 原有：触发 AI 分析（手势 & 面部表情）
- */
-async function triggerAnalysis() {
-  if (!analysisReady.value) {
-    // 第一次初始化 MediaPipe
+// Async function to initialize the GestureRecognizer
+async function createGestureRecognizer() {
+  console.log("[createGestureRecognizer] - Initializing...");
+  try {
     const vision = await FilesetResolver.forVisionTasks(VISION_WASM_URL_BASE);
-
-    // 手势识别
     gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
       baseOptions: {
         modelAssetPath: GESTURE_RECOGNIZER_TASK_URL,
@@ -166,55 +134,308 @@ async function triggerAnalysis() {
       minHandPresenceConfidence: 0.5,
       minTrackingConfidence: 0.5,
     });
+    console.log("GestureRecognizer initialized successfully.");
+  } catch (error) {
+    console.error("Error initializing GestureRecognizer:", error);
+    feedbackList.value = [`AI手势识别模型加载失败: ${error.message}`];
+    gestureRecognizer = null;
+  }
+}
 
-    // 人脸关键点
+// Async function to initialize the FaceLandmarker
+async function createFaceLandmarker() {
+  console.log("[createFaceLandmarker] - Initializing with blendshapes...");
+  try {
+    const vision = await FilesetResolver.forVisionTasks(VISION_WASM_URL_BASE);
     faceLandmarker = await FaceLandmarker.createFromOptions(vision, {
       baseOptions: {
         modelAssetPath: FACE_LANDMARKER_TASK_URL,
         delegate: "GPU",
       },
       runningMode: "VIDEO",
+      outputFaceBlendshapes: true, // 关键：启用blendshapes输出
       numFaces: 1,
+      minFaceDetectionConfidence: 0.5,
+      minFacePresenceConfidence: 0.5,
+      minTrackingConfidence: 0.5,
     });
+    console.log("FaceLandmarker with blendshapes initialized successfully.");
+  } catch (error) {
+    console.error("Error initializing FaceLandmarker:", error);
+    feedbackList.value = [`AI面部识别模型加载失败: ${error.message}`];
+    faceLandmarker = null;
+  }
+}
 
-    drawingUtils = new DrawingUtils();
-    analysisReady.value = true;
+// Function to start the webcam and detection
+async function startCamera() {
+  console.log("[startCamera] - Attempting to start camera...");
+
+  // Initialize models if not ready
+  if (!gestureRecognizer) {
+    await createGestureRecognizer();
+  }
+  if (!faceLandmarker) {
+    await createFaceLandmarker();
   }
 
-  // 清空旧反馈
-  feedbackList.value = [];
+  if (!gestureRecognizer || !faceLandmarker) {
+    feedbackList.value = ["AI模型初始化失败，无法开启摄像头。"];
+    return;
+  }
 
-  // 循环读取视频帧并分析
-  const processFrame = async () => {
-    if (!cameraOn.value) return;
+  if (cameraOn.value) {
+    console.log("[startCamera] - Camera is already on.");
+    return;
+  }
 
-    overlayCtx.drawImage(cameraView.value, 0, 0, overlay.value.width, overlay.value.height);
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    console.error(
+      "[startCamera] - getUserMedia not supported on this browser."
+    );
+    feedbackList.value = ["您的浏览器不支持摄像头访问。"];
+    return;
+  }
 
-    // 手势识别
-    const gestureResult = gestureRecognizer.recognize(overlay.value);
-    if (gestureResult.gestures.length > 0) {
-      gesture.value = gestureResult.gestures[0][0].categoryName;
-      feedbackList.value.push(`检测到手势：${gesture.value}`);
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 640 }, height: { ideal: 480 } },
+    });
+
+    if (cameraView.value) {
+      cameraView.value.srcObject = stream;
+      cameraView.value.onloadeddata = () => {
+        console.log("Video data loaded. Starting prediction loop.");
+        if (overlay.value) {
+          overlayCtx = overlay.value.getContext("2d");
+          if (overlayCtx) {
+            drawingUtils = new DrawingUtils(overlayCtx);
+            console.log("Canvas context and DrawingUtils initialized.");
+            lastVideoTime = -1;
+            cameraOn.value = true;
+            if (cameraOn.value) predictWebcam();
+          } else {
+            console.error("Failed to get 2D context from overlay canvas.");
+            feedbackList.value = ["无法初始化绘图区域。"];
+            cameraOn.value = false;
+            stream.getTracks().forEach((track) => track.stop());
+          }
+        } else {
+          console.error("Overlay canvas element not found.");
+          feedbackList.value = ["绘图区域未找到。"];
+          cameraOn.value = false;
+          stream.getTracks().forEach((track) => track.stop());
+        }
+      };
+    } else {
+      console.error("Video element (cameraView) not found.");
+      stream.getTracks().forEach((track) => track.stop());
+      cameraOn.value = false;
+    }
+  } catch (error) {
+    console.error("[startCamera] - Error accessing webcam:", error);
+    feedbackList.value = [`无法访问摄像头: ${error.message}`];
+    cameraOn.value = false;
+  }
+}
+
+let lastVideoTime = -1;
+async function predictWebcam() {
+  if (
+    !cameraOn.value ||
+    !cameraView.value ||
+    !gestureRecognizer ||
+    !faceLandmarker ||
+    !drawingUtils ||
+    !overlayCtx
+  ) {
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    return;
+  }
+
+  if (
+    cameraView.value.paused ||
+    cameraView.value.ended ||
+    cameraView.value.readyState < 2
+  ) {
+    animationFrameId = requestAnimationFrame(predictWebcam);
+    return;
+  }
+
+  const video = cameraView.value;
+  if (
+    overlay.value &&
+    (overlay.value.width !== video.videoWidth ||
+      overlay.value.height !== video.videoHeight)
+  ) {
+    if (video.videoWidth > 0 && video.videoHeight > 0) {
+      overlay.value.width = video.videoWidth;
+      overlay.value.height = video.videoHeight;
+    }
+  }
+
+  if (video.currentTime !== lastVideoTime) {
+    lastVideoTime = video.currentTime;
+    const startTimeMs = performance.now();
+
+    // Clear canvas before drawing new results
+    overlayCtx.clearRect(0, 0, overlay.value.width, overlay.value.height);
+
+    // Process gesture recognition
+    const gestureResults = gestureRecognizer.recognizeForVideo(
+      video,
+      startTimeMs
+    );
+    processGestureResults(gestureResults);
+
+    // Process face recognition
+    const faceResults = faceLandmarker.detectForVideo(video, startTimeMs);
+    processFaceResults(faceResults);
+  }
+
+  if (cameraOn.value) {
+    animationFrameId = requestAnimationFrame(predictWebcam);
+  }
+}
+
+function processGestureResults(results) {
+  // Draw hand landmarks
+  if (results.landmarks && results.landmarks.length > 0) {
+    for (const landmarks of results.landmarks) {
+      drawingUtils.drawConnectors(
+        landmarks,
+        GestureRecognizer.HAND_CONNECTIONS,
+        {
+          color: "#00FF00",
+          lineWidth: 5,
+        }
+      );
+      drawingUtils.drawLandmarks(landmarks, {
+        color: "#FF0000",
+        lineWidth: 2,
+        radius: 3,
+      });
+    }
+  }
+
+  // Update gesture text
+  if (
+    results.gestures &&
+    results.gestures.length > 0 &&
+    results.gestures[0].length > 0
+  ) {
+    const topGesture = results.gestures[0][0];
+    const categoryName = topGesture.categoryName;
+    const categoryScore = parseFloat(topGesture.score * 100).toFixed(2);
+    const handedness =
+      results.handednesses &&
+        results.handednesses.length > 0 &&
+        results.handednesses[0].length > 0
+        ? results.handednesses[0][0].displayName
+        : "N/A";
+
+    if (categoryName && categoryName !== "") {
+      gesture.value = `${categoryName} (${categoryScore}%) - ${handedness}`;
+    } else {
+      gesture.value = `未知手势 (${categoryScore}%) - ${handedness}`;
+    }
+  } else {
+    gesture.value = "无手势";
+  }
+}
+
+function processFaceResults(results) {
+  // Draw face landmarks
+  if (results.faceLandmarks && results.faceLandmarks.length > 0) {
+    for (const landmarks of results.faceLandmarks) {
+      drawingUtils.drawConnectors(
+        landmarks,
+        FaceLandmarker.FACE_LANDMARKS_TESSELATION,
+        { color: "#C0C0C070", lineWidth: 1 }
+      );
+      drawingUtils.drawConnectors(
+        landmarks,
+        FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,
+        { color: "#FF3030", lineWidth: 2 }
+      );
+      drawingUtils.drawConnectors(
+        landmarks,
+        FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,
+        { color: "#30FF30", lineWidth: 2 }
+      );
+      drawingUtils.drawConnectors(
+        landmarks,
+        FaceLandmarker.FACE_LANDMARKS_LIPS,
+        { color: "#E0E0E0", lineWidth: 2 }
+      );
     }
 
-    // 人脸关键点检测
-    const faceResult = faceLandmarker.detect(overlay.value);
-    if (faceResult.faceLandmarks.length > 0) {
-      drawingUtils.drawConnectors(overlayCtx, faceResult.faceLandmarks[0], DrawingUtils.FACE_LANDMARKS, {});
+    // Process blendshapes
+    if (results.faceBlendshapes && results.faceBlendshapes.length > 0) {
+      const blendshapes = results.faceBlendshapes[0].categories;
 
-      feedbackList.value.push(`检测到人脸关键点`);
+      // Extract and sort blendshapes by score
+      const sortedBlendshapes = blendshapes
+        .filter((shape) => shape.score > 0.1) // Filter out low-confidence shapes
+        .sort((a, b) => b.score - a.score); // Sort by score in descending order
+
+      // Format the blendshapes as a string
+      const blendshapeLabels = sortedBlendshapes.map(
+        (shape) => `${shape.categoryName} (${(shape.score * 100).toFixed(1)}%)`
+      );
+
+      // Update face expression display
+      faceExpression.value = blendshapeLabels.join(", ");
+    } else {
+      faceExpression.value = "无检测";
     }
+  } else {
+    faceExpression.value = "无检测";
+  }
+}
 
-    animationFrameId = requestAnimationFrame(processFrame);
-  };
+function stopCamera() {
+  console.log("[stopCamera] - Attempting to stop camera...");
+  cameraOn.value = false;
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
 
-  processFrame();
+  if (cameraView.value && cameraView.value.srcObject) {
+    const stream = cameraView.value.srcObject;
+    const tracks = stream.getTracks();
+    tracks.forEach((track) => track.stop());
+    cameraView.value.srcObject = null;
+    cameraView.value.onloadeddata = null;
+    console.log("[stopCamera] - Webcam stream stopped and detached.");
+  }
+  if (overlayCtx && overlay.value) {
+    overlayCtx.clearRect(0, 0, overlay.value.width, overlay.value.height);
+  }
+  gesture.value = "无";
+  faceExpression.value = "无检测";
+  lastVideoTime = -1;
+  analysisReady.value = false;
+}
+
+function analyze() {
+  if (cameraOn.value) {
+    analysisReady.value = true;
+    feedbackList.value = [
+      "请保持眼神交流。",
+      "回答速度可以更均匀一些。",
+      "尝试多使用专业术语，提高表达精准度。",
+      `当前手势: ${gesture.value}`,
+      `当前表情: ${faceExpression.value}`,
+    ];
+  } else {
+    feedbackList.value = ["请先开启摄像头再进行AI分析。"];
+    analysisReady.value = false;
+  }
 }
 
 onMounted(async () => {
-  // 原有 onMounted 内容：无须放在此处重复
-
-  // 新增：初始化 Web Speech API
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (SpeechRecognition) {
     recognition = new SpeechRecognition();
@@ -232,7 +453,6 @@ onMounted(async () => {
           interim += text;
         }
       }
-      // 若需显示中间结果，可使用 transcript.value + interim
     };
 
     recognition.onerror = (e) => {
@@ -245,25 +465,22 @@ onMounted(async () => {
   } else {
     console.warn("浏览器不支持 SpeechRecognition");
   }
+  console.log("Vue component MOUNTED. Initializing models...");
+  await createGestureRecognizer();
+  await createFaceLandmarker();
 });
 
-// 新增：开始语音识别
-function startRecognition() {
-  if (recognition && !isRecognizing.value) {
-    transcript.value = "";
-    recognition.start();
-    isRecognizing.value = true;
-  }
-}
-
-// 新增：停止语音识别
-function stopRecognition() {
-  if (recognition && isRecognizing.value) {
-    recognition.stop();
-  }
-}
-
 onUnmounted(() => {
+  console.log("Vue component UNMOUNTED. Cleaning up...");
+  stopCamera();
+  if (gestureRecognizer) {
+    gestureRecognizer.close();
+    gestureRecognizer = null;
+  }
+  if (faceLandmarker) {
+    faceLandmarker.close();
+    faceLandmarker = null;
+  }
   console.log("Vue component UNMOUNTED. Cleaning up...");
   // 关闭摄像头
   if (cameraOn.value) {
@@ -284,6 +501,25 @@ onUnmounted(() => {
     recognition.stop();
   }
 });
+
+// 新增：语音识别状态
+const transcript = ref("");
+const isRecognizing = ref(false);
+let recognition = null;
+
+function startRecognition() {
+  if (recognition && !isRecognizing.value) {
+    transcript.value = "";
+    recognition.start();
+    isRecognizing.value = true;
+  }
+}
+
+function stopRecognition() {
+  if (recognition && isRecognizing.value) {
+    recognition.stop();
+  }
+}
 </script>
 
 <style scoped>
