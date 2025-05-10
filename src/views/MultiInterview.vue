@@ -53,9 +53,23 @@
               playsinline
               :ref="(el) => (videoElements[i] = el)"
             ></video>
+            <canvas
+              :ref="(el) => (canvasElements[i] = el)"
+              class="overlay-canvas"
+            ></canvas>
             <div class="participant-info">
               <div class="participant-avatar">{{ p.initial }}</div>
               <span>{{ p.name }}<span v-if="p.isSelf"> (您)</span></span>
+            </div>
+            <div class="status-indicator" v-if="p.isSelf">
+              摄像头: {{ cameraOn ? "已开启" : "等待开启" }}
+            </div>
+            <div class="analysis-indicator" v-if="p.isSelf">
+              AI分析: {{ analysisReady ? "就绪" : "准备就绪" }}
+            </div>
+            <div class="indicator-container" v-if="p.isSelf">
+              <div class="gesture-indicator">手势: {{ gesture }}</div>
+              <div class="face-indicator">面部: {{ faceExpression }}</div>
             </div>
           </div>
         </div>
@@ -131,9 +145,15 @@
     </div>
   </div>
 </template>
-  
-  <script setup>
-import { ref, onUnmounted } from "vue";
+
+<script setup>
+import { ref, onMounted, onUnmounted } from "vue";
+import {
+  GestureRecognizer,
+  FaceLandmarker,
+  FilesetResolver,
+  DrawingUtils,
+} from "@mediapipe/tasks-vision";
 
 // 参与者列表
 const participants = [
@@ -147,8 +167,15 @@ const participants = [
 
 const userName = ref("张小明");
 const cameraOn = ref(false);
+const analysisReady = ref(false);
 const videoElements = ref([]);
+const canvasElements = ref([]);
+let overlayCtx = null;
 let stream = null;
+
+// 手势和面部识别状态
+const gesture = ref("无");
+const faceExpression = ref("无检测");
 
 // 聊天消息
 const chatMessages = ref([
@@ -176,42 +203,316 @@ const inputText = ref("");
 // AI 分析反馈
 const analysisFeedback = ref([]);
 
-function formatTime(date) {
-  const hh = String(date.getHours()).padStart(2, "0");
-  const mm = String(date.getMinutes()).padStart(2, "0");
-  return `${hh}:${mm}`;
+// MediaPipe models variables
+let gestureRecognizer = null;
+let faceLandmarker = null;
+let drawingUtils = null;
+let animationFrameId = null;
+
+// Paths for MediaPipe Tasks Vision assets
+const MEDIAPIPE_TASKS_VISION_VERSION = "0.10.22-rc.20250304";
+const GESTURE_RECOGNIZER_TASK_URL =
+  "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task";
+const FACE_LANDMARKER_TASK_URL =
+  "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
+const VISION_WASM_URL_BASE = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_TASKS_VISION_VERSION}/wasm`;
+
+let lastVideoTime = -1;
+
+// Async function to initialize the GestureRecognizer
+async function createGestureRecognizer() {
+  console.log("[createGestureRecognizer] - Initializing...");
+  try {
+    const vision = await FilesetResolver.forVisionTasks(VISION_WASM_URL_BASE);
+    gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
+      baseOptions: {
+        modelAssetPath: GESTURE_RECOGNIZER_TASK_URL,
+        delegate: "GPU",
+      },
+      runningMode: "VIDEO",
+      numHands: 1,
+      minHandDetectionConfidence: 0.5,
+      minHandPresenceConfidence: 0.5,
+      minTrackingConfidence: 0.5,
+    });
+    console.log("GestureRecognizer initialized successfully.");
+  } catch (error) {
+    console.error("Error initializing GestureRecognizer:", error);
+    analysisFeedback.value = [`AI手势识别模型加载失败: ${error.message}`];
+    gestureRecognizer = null;
+  }
+}
+
+// Async function to initialize the FaceLandmarker
+async function createFaceLandmarker() {
+  console.log("[createFaceLandmarker] - Initializing with blendshapes...");
+  try {
+    const vision = await FilesetResolver.forVisionTasks(VISION_WASM_URL_BASE);
+    faceLandmarker = await FaceLandmarker.createFromOptions(vision, {
+      baseOptions: {
+        modelAssetPath: FACE_LANDMARKER_TASK_URL,
+        delegate: "GPU",
+      },
+      runningMode: "VIDEO",
+      outputFaceBlendshapes: true,
+      numFaces: 1,
+      minFaceDetectionConfidence: 0.5,
+      minFacePresenceConfidence: 0.5,
+      minTrackingConfidence: 0.5,
+    });
+    console.log("FaceLandmarker with blendshapes initialized successfully.");
+  } catch (error) {
+    console.error("Error initializing FaceLandmarker:", error);
+    analysisFeedback.value = [`AI面部识别模型加载失败: ${error.message}`];
+    faceLandmarker = null;
+  }
 }
 
 async function startCamera() {
   if (!cameraOn.value) {
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      // 仅设置第一个视频元素
+      // Initialize models if not ready
+      if (!gestureRecognizer) {
+        await createGestureRecognizer();
+      }
+      if (!faceLandmarker) {
+        await createFaceLandmarker();
+      }
+
+      if (!gestureRecognizer || !faceLandmarker) {
+        analysisFeedback.value = ["AI模型初始化失败，无法开启摄像头。"];
+        return;
+      }
+
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 640 }, height: { ideal: 480 } },
+      });
+
+      // 仅设置第一个视频元素（自己的摄像头）
       const firstVideo = videoElements.value[0];
+      const firstCanvas = canvasElements.value[0];
+
       if (firstVideo) {
         firstVideo.srcObject = stream;
+        firstVideo.onloadeddata = () => {
+          if (firstCanvas) {
+            overlayCtx = firstCanvas.getContext("2d");
+            if (overlayCtx) {
+              drawingUtils = new DrawingUtils(overlayCtx);
+              lastVideoTime = -1;
+              cameraOn.value = true;
+              if (cameraOn.value) predictWebcam();
+            }
+          }
+        };
       }
-      cameraOn.value = true;
     } catch (err) {
       console.error("无法开启摄像头:", err);
+      analysisFeedback.value = [`无法访问摄像头: ${err.message}`];
     }
   }
 }
 
-function stopCamera() {
-  if (cameraOn.value && stream) {
-    stream.getTracks().forEach((track) => track.stop());
-    cameraOn.value = false;
+async function predictWebcam() {
+  if (
+    !cameraOn.value ||
+    !videoElements.value[0] ||
+    !gestureRecognizer ||
+    !faceLandmarker ||
+    !drawingUtils ||
+    !overlayCtx
+  ) {
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    return;
+  }
+
+  const video = videoElements.value[0];
+  const canvas = canvasElements.value[0];
+
+  if (video.paused || video.ended || video.readyState < 2) {
+    animationFrameId = requestAnimationFrame(predictWebcam);
+    return;
+  }
+
+  if (
+    canvas &&
+    (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight)
+  ) {
+    if (video.videoWidth > 0 && video.videoHeight > 0) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+    }
+  }
+
+  if (video.currentTime !== lastVideoTime) {
+    lastVideoTime = video.currentTime;
+    const startTimeMs = performance.now();
+
+    // Clear canvas before drawing new results
+    overlayCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Process gesture recognition
+    const gestureResults = gestureRecognizer.recognizeForVideo(
+      video,
+      startTimeMs
+    );
+    processGestureResults(gestureResults);
+
+    // Process face recognition
+    const faceResults = faceLandmarker.detectForVideo(video, startTimeMs);
+    processFaceResults(faceResults);
+  }
+
+  if (cameraOn.value) {
+    animationFrameId = requestAnimationFrame(predictWebcam);
   }
 }
 
+function processGestureResults(results) {
+  // Draw hand landmarks
+  if (results.landmarks && results.landmarks.length > 0) {
+    for (const landmarks of results.landmarks) {
+      drawingUtils.drawConnectors(
+        landmarks,
+        GestureRecognizer.HAND_CONNECTIONS,
+        {
+          color: "#00FF00",
+          lineWidth: 5,
+        }
+      );
+      drawingUtils.drawLandmarks(landmarks, {
+        color: "#FF0000",
+        lineWidth: 2,
+        radius: 3,
+      });
+    }
+  }
+
+  // Update gesture text
+  if (
+    results.gestures &&
+    results.gestures.length > 0 &&
+    results.gestures[0].length > 0
+  ) {
+    const topGesture = results.gestures[0][0];
+    const categoryName = topGesture.categoryName;
+    const categoryScore = parseFloat(topGesture.score * 100).toFixed(2);
+    const handedness =
+      results.handednesses &&
+      results.handednesses.length > 0 &&
+      results.handednesses[0].length > 0
+        ? results.handednesses[0][0].displayName
+        : "N/A";
+
+    if (categoryName && categoryName !== "") {
+      gesture.value = `${categoryName} (${categoryScore}%) - ${handedness}`;
+    } else {
+      gesture.value = `未知手势 (${categoryScore}%) - ${handedness}`;
+    }
+  } else {
+    gesture.value = "无手势";
+  }
+}
+
+function processFaceResults(results) {
+  // Draw face landmarks
+  if (results.faceLandmarks && results.faceLandmarks.length > 0) {
+    for (const landmarks of results.faceLandmarks) {
+      drawingUtils.drawConnectors(
+        landmarks,
+        FaceLandmarker.FACE_LANDMARKS_TESSELATION,
+        { color: "#C0C0C070", lineWidth: 1 }
+      );
+      drawingUtils.drawConnectors(
+        landmarks,
+        FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,
+        { color: "#FF3030", lineWidth: 2 }
+      );
+      drawingUtils.drawConnectors(
+        landmarks,
+        FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,
+        { color: "#30FF30", lineWidth: 2 }
+      );
+      drawingUtils.drawConnectors(
+        landmarks,
+        FaceLandmarker.FACE_LANDMARKS_LIPS,
+        { color: "#E0E0E0", lineWidth: 2 }
+      );
+    }
+
+    // Process blendshapes
+    if (results.faceBlendshapes && results.faceBlendshapes.length > 0) {
+      const blendshapes = results.faceBlendshapes[0].categories;
+
+      // Extract and sort blendshapes by score
+      const sortedBlendshapes = blendshapes
+        .filter((shape) => shape.score > 0.1)
+        .sort((a, b) => b.score - a.score);
+
+      // Format the blendshapes as a string
+      const blendshapeLabels = sortedBlendshapes.map(
+        (shape) => `${shape.categoryName} (${(shape.score * 100).toFixed(1)}%)`
+      );
+
+      // Update face expression display
+      faceExpression.value = blendshapeLabels.join(", ");
+    } else {
+      faceExpression.value = "无检测";
+    }
+  } else {
+    faceExpression.value = "无检测";
+  }
+}
+
+function stopCamera() {
+  cameraOn.value = false;
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
+
+  if (videoElements.value[0] && videoElements.value[0].srcObject) {
+    const stream = videoElements.value[0].srcObject;
+    const tracks = stream.getTracks();
+    tracks.forEach((track) => track.stop());
+    videoElements.value[0].srcObject = null;
+  }
+
+  if (canvasElements.value[0] && overlayCtx) {
+    overlayCtx.clearRect(
+      0,
+      0,
+      canvasElements.value[0].width,
+      canvasElements.value[0].height
+    );
+  }
+
+  gesture.value = "无";
+  faceExpression.value = "无检测";
+  lastVideoTime = -1;
+  analysisReady.value = false;
+}
+
 function analyze() {
-  // 模拟 AI 分析结果
-  analysisFeedback.value = [
-    "请注意群体互动时的眼神交流。",
-    "尝试在讨论中更积极地发言。",
-    "团队合作时，多给予他人回应。",
-  ];
+  if (cameraOn.value) {
+    analysisReady.value = true;
+    analysisFeedback.value = [
+      "请保持眼神交流。",
+      "回答速度可以更均匀一些。",
+      "尝试多使用专业术语，提高表达精准度。",
+      `当前手势: ${gesture.value}`,
+      `当前表情: ${faceExpression.value}`,
+    ];
+  } else {
+    analysisFeedback.value = ["请先开启摄像头再进行AI分析。"];
+    analysisReady.value = false;
+  }
+}
+
+function formatTime(date) {
+  const hh = String(date.getHours()).padStart(2, "0");
+  const mm = String(date.getMinutes()).padStart(2, "0");
+  return `${hh}:${mm}`;
 }
 
 function sendMessage() {
@@ -230,10 +531,88 @@ function sendMessage() {
   }
 }
 
+onMounted(async () => {
+  console.log("Vue component MOUNTED. Initializing models...");
+  await createGestureRecognizer();
+  await createFaceLandmarker();
+});
+
 onUnmounted(() => {
-  if (stream) stream.getTracks().forEach((track) => track.stop());
+  console.log("Vue component UNMOUNTED. Cleaning up...");
+  stopCamera();
+  if (gestureRecognizer) {
+    gestureRecognizer.close();
+    gestureRecognizer = null;
+  }
+  if (faceLandmarker) {
+    faceLandmarker.close();
+    faceLandmarker = null;
+  }
 });
 </script>
-  
-  <style scoped src="../assets/multi_interview.css" />
-  
+
+<style scoped>
+.video-item {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+
+.video-item video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transform: scaleX(-1);
+}
+
+.overlay-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: scaleX(-1);
+}
+
+.indicator-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.gesture-indicator,
+.face-indicator {
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  z-index: 10;
+}
+
+.status-indicator,
+.analysis-indicator {
+  position: absolute;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  z-index: 10;
+}
+.status-indicator {
+  top: 10px;
+}
+.analysis-indicator {
+  top: 40px;
+}
+</style>
+
+<style scoped src="../assets/multi_interview.css"></style>
