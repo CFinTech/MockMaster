@@ -18,12 +18,23 @@
       <div class="camera-section">
         <div class="section-header">您的面试</div>
         <div class="camera-container">
+          <div class="status-indicator">
+            摄像头: {{ cameraOn ? "已开启" : "等待开启" }}
+          </div>
+          <div class="analysis-indicator">
+            AI分析: {{ analysisReady ? "就绪" : "准备就绪" }}
+          </div>
+          <div class="indicator-container">
+            <div class="gesture-indicator">手势: {{ gesture }}</div>
+            <div class="face-indicator">面部: {{ faceExpression }}</div>
+          </div>
           <video ref="cameraView" autoplay playsinline></video>
           <canvas ref="overlay" class="overlay-canvas"></canvas>
         </div>
         <div class="camera-controls">
-          <button @click="toggleCamera">
-            {{ cameraOn ? "关闭摄像头" : "开启摄像头" }}
+          <button @click="toggleCamera" class="control-btn">开启摄像头</button>
+          <button @click="stopCamera" :disabled="!cameraOn" class="control-btn stop">
+            关闭摄像头
           </button>
           <button @click="triggerAnalysis" :disabled="!cameraOn">
             {{ analysisReady ? "重新分析" : "开启 AI 分析" }}
@@ -62,8 +73,11 @@
 
     <div class="footer">
       <div class="footer-links">
-        <a href="#">帮助</a>
-        <a href="#">关于</a>
+        <a href="#" class="footer-link">关于我们</a>
+        <a href="#" class="footer-link">隐私政策</a>
+        <a href="#" class="footer-link">使用条款</a>
+        <div class="copyright">© 2025 AI面试助手 | 由智能人机交互团队制作</div>
+        <div class="version">v1.0.0</div>
       </div>
     </div>
   </div>
