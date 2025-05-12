@@ -265,7 +265,7 @@
   position: absolute;
   bottom: 10px;
   left: 10px;
-  width: 300px;
+  width: 135px;
   display: flex;
   flex-direction: column;
 }
@@ -279,6 +279,7 @@
   font-size: 0.9em;
   z-index: 10;
   margin-bottom: 10px;
+  white-space: pre-line;
 }
 
 .speech-panel {
