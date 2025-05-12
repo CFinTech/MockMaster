@@ -93,6 +93,8 @@
   color: #2c3e50;
   border-bottom: 1px solid #eee;
   background-color: #f9f9f9f9;
+  display: flex;
+  align-items: center;
 }
 
 .camera-container {
@@ -331,4 +333,20 @@
 
 .footer-link:hover {
   color: #4caf50;
+}
+
+.spinner {
+  width: 1em;
+  height: 1em;
+  margin-left: 0.5em;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

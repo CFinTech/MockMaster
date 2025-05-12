@@ -2,20 +2,9 @@
   <div class="container">
     <div class="top-nav">
       <a href="#" class="back-button">
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M19 12H5M5 12L12 19M5 12L12 5"
-            stroke="#4CAF50"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
         </svg>
         返回主页
       </a>
@@ -46,11 +35,7 @@
         </div>
         <div class="camera-controls">
           <button @click="startCamera" class="control-btn">开启摄像头</button>
-          <button
-            @click="stopCamera"
-            :disabled="!cameraOn"
-            class="control-btn stop"
-          >
+          <button @click="stopCamera" :disabled="!cameraOn" class="control-btn stop">
             关闭摄像头
           </button>
           <button @click="analyze" class="control-btn">
@@ -62,34 +47,24 @@
       <div class="feedback-section">
         <div class="section-header">语音转文字</div>
         <div class="speech-panel">
-          <div class="transcript">{{ transcript }}</div>
+          <div class="transcript">{{ transcript + interimTranscript }}</div>
+          <!-- <h3>DeepSeek 评价：</h3>
+          <p v-if="loadingEval">正在评价…</p>
+          <p v-else>{{ evaluation }}</p> -->
           <div class="btn-group">
-            <button
-              class="control-btn"
-              @click="startRecognition"
-              :disabled="isRecognizing"
-            >
-              开始识别
+            <button class="control-btn stop" @click="startRecognition">
+              {{ isRecognizing ? '停止识别' : '开始识别' }}
             </button>
-            <button
-              class="control-btn stop"
-              @click="stopRecognition"
-              :disabled="!isRecognizing"
-            >
-              停止识别
-            </button>
+
           </div>
         </div>
 
-        <div class="section-header">AI 面试反馈</div>
+        <div class="section-header">AI 面试反馈
+          <span v-if="loadingEval" class="spinner"></span>
+        </div>
         <div class="content">
           <div class="ai-feedback" id="feedback-container">
-            <div
-              v-for="(item, idx) in feedbackList"
-              :key="idx"
-              class="feedback-item"
-            >
-              {{ item }}
+            <div v-for="(item, idx) in feedbackList" :key="idx" class="feedback-item" v-html="renderMarkdown(item)">
             </div>
           </div>
         </div>
@@ -116,6 +91,8 @@ import {
   FilesetResolver,
   DrawingUtils,
 } from "@mediapipe/tasks-vision";
+import OpenAI from "openai";
+import { marked } from 'marked'
 
 const userName = ref("张小明");
 const cameraOn = ref(false);
@@ -132,6 +109,12 @@ let gestureRecognizer = null;
 let faceLandmarker = null;
 let drawingUtils = null;
 let animationFrameId = null;
+
+
+const transcript = ref("");
+const interimTranscript = ref('')
+const isRecognizing = ref(false);
+let recognition = null;
 
 const MEDIAPIPE_TASKS_VISION_VERSION = "0.10.22-rc.20250304";
 const GESTURE_RECOGNIZER_TASK_URL = `https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task`;
@@ -355,8 +338,8 @@ function processGestureResults(results) {
     const categoryScore = parseFloat(topGesture.score * 100).toFixed(2);
     const handedness =
       results.handednesses &&
-      results.handednesses.length > 0 &&
-      results.handednesses[0].length > 0
+        results.handednesses.length > 0 &&
+        results.handednesses[0].length > 0
         ? results.handednesses[0][0].displayName
         : "N/A";
 
@@ -704,20 +687,43 @@ onMounted(async () => {
   if (SpeechRecognition) {
     recognition = new SpeechRecognition();
     recognition.continuous = true;
-    recognition.interimResults = true;
+    recognition.interimResults = false;
     recognition.lang = "zh-CN";
 
+    // recognition.onresult = (event) => {
+    //   let interim = "";
+    //   for (let i = event.resultIndex; i < event.results.length; i++) {
+    //     const text = event.results[i][0].transcript;
+    //     if (event.results[i].isFinal) {
+    //       transcript.value += text;
+    //       evaluateWithDeepSeek(transcript.value)
+    //     } else {
+    //       interim += text;
+    //     }
+    //   }
+    //   interimTranscript.value = interim
+    // };
+    // recognition.onresult = (event) => {
+    //   // 只处理 isFinal=true，即最终结果
+    //   for (let i = event.resultIndex; i < event.results.length; i++) {
+    //     if (event.results[i].isFinal) {
+    //       transcript.value += event.results[i][0].transcript
+    //       evaluateWithDeepSeek(transcript.value) // 停后才调用 DeepSeek
+    //     }
+    //   }
+    // }
     recognition.onresult = (event) => {
-      let interim = "";
+      let interim = ''
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        const text = event.results[i][0].transcript;
+        const txt = event.results[i][0].transcript
         if (event.results[i].isFinal) {
-          transcript.value += text;
+          transcript.value += txt
         } else {
-          interim += text;
+          interim += txt
         }
       }
-    };
+      interimTranscript.value = interim
+    }
 
     recognition.onerror = (e) => {
       console.error("语音识别出错：", e);
@@ -750,23 +756,69 @@ onUnmounted(() => {
   }
 });
 
-const transcript = ref("");
-const isRecognizing = ref(false);
-let recognition = null;
-
 function startRecognition() {
-  if (recognition && !isRecognizing.value) {
-    transcript.value = "";
-    recognition.start();
-    isRecognizing.value = true;
+  // if (recognition && !isRecognizing.value) {
+  //   transcript.value = "";
+  //   recognition.start();
+  //   isRecognizing.value = true;
+  // }
+  if (isRecognizing.value) {
+    recognition.stop()
+    isRecognizing.value = false
+    evaluateWithDeepSeek(transcript.value)
+  } else {
+    transcript.value = ''
+    evaluation.value = ''
+    recognition.start()
+    isRecognizing.value = true
   }
 }
 
-function stopRecognition() {
-  if (recognition && isRecognizing.value) {
-    recognition.stop();
+// function stopRecognition() {
+//   if (recognition && isRecognizing.value) {
+//     recognition.stop();
+//   }
+// }
+
+const evaluation = ref('')
+const loadingEval = ref(false)
+
+// sk-0f909e0c234c4fd3a582966371e29f63
+async function evaluateWithDeepSeek(text) {
+  console.log(text)
+  if (!text) {
+    evaluation.value = ''
+    return
+  }
+  loadingEval.value = true
+  const openai = new OpenAI({
+    baseURL: 'https://api.deepseek.com',
+    apiKey: 'sk-0f909e0c234c4fd3a582966371e29f63',
+    dangerouslyAllowBrowser: true
+  })
+  try {
+    const completion = await openai.chat.completions.create({
+      messages: [
+        { role: "system", content: "你是一位AI面试官，需要帮助用户优化面试表现。对于以下作答，给出专业，有价值，具有帮助性，态度友好的回答。内容上回答顺序为[总体评价][优点][改进建议]。形式上以清晰美观且可以被js的marked包直接渲染的格式输出。省略头部的“```markdown”和尾部的“```”" },
+        { role: 'user', content: text }],
+      model: "deepseek-chat",
+    });
+    evaluation.value = completion.choices[0].message.content
+    feedbackList.value = [evaluation.value]
+  } catch (err) {
+    console.error('DeepSeek 评价失败：', err)
+    evaluation.value = '评价服务不可用'
+  } finally {
+    loadingEval.value = false
   }
 }
+
+function renderMarkdown(text) {
+  const norm = text.replace(/```[a-zA-Z]*\n/, '').replace(/```/, '')
+  console.log(norm);
+  return marked.parse(norm)
+}
+
 </script>
 
 <style scoped>
