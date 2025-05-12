@@ -2,9 +2,20 @@
   <div class="container">
     <div class="top-nav">
       <a href="#" class="back-button">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" />
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M19 12H5M5 12L12 19M5 12L12 5"
+            stroke="#4CAF50"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
         返回主页
       </a>
@@ -18,52 +29,66 @@
       <div class="camera-section">
         <div class="section-header">您的面试</div>
         <div class="camera-container">
-          <div class="status-indicator">
-            摄像头: {{ cameraOn ? "已开启" : "等待开启" }}
+          <div class="status-indicators">
+            <div class="status-indicator">
+              摄像头: {{ cameraOn ? "已开启" : "等待开启" }}
+            </div>
+            <div class="analysis-indicator">
+              AI分析: {{ analysisReady ? "已开启" : "准备就绪" }}
+            </div>
           </div>
-          <div class="analysis-indicator">
-            AI分析: {{ analysisReady ? "就绪" : "准备就绪" }}
-          </div>
+          <video ref="cameraView" autoplay playsinline></video>
+          <canvas ref="overlay" class="overlay-canvas"></canvas>
           <div class="indicator-container">
             <div class="gesture-indicator">手势: {{ gesture }}</div>
             <div class="face-indicator">面部: {{ faceExpression }}</div>
           </div>
-          <video ref="cameraView" autoplay playsinline></video>
-          <canvas ref="overlay" class="overlay-canvas"></canvas>
         </div>
         <div class="camera-controls">
           <button @click="startCamera" class="control-btn">开启摄像头</button>
-          <button @click="stopCamera" :disabled="!cameraOn" class="control-btn stop">
+          <button
+            @click="stopCamera"
+            :disabled="!cameraOn"
+            class="control-btn stop"
+          >
             关闭摄像头
           </button>
           <button @click="analyze" class="control-btn">
             {{ analysisReady ? "重新分析" : "开启AI分析" }}
           </button>
         </div>
-        <div class="status-indicator" v-if="cameraOn">摄像头已开启</div>
-        <div class="analysis-indicator" v-if="analysisReady">AI 分析就绪</div>
       </div>
 
       <div class="feedback-section">
-        <!-- 语音转文字 新功能 -->
         <div class="section-header">语音转文字</div>
         <div class="speech-panel">
           <div class="transcript">{{ transcript }}</div>
           <div class="btn-group">
-            <button class="control-btn" @click="startRecognition" :disabled="isRecognizing">
+            <button
+              class="control-btn"
+              @click="startRecognition"
+              :disabled="isRecognizing"
+            >
               开始识别
             </button>
-            <button class="control-btn stop" @click="stopRecognition" :disabled="!isRecognizing">
+            <button
+              class="control-btn stop"
+              @click="stopRecognition"
+              :disabled="!isRecognizing"
+            >
               停止识别
             </button>
           </div>
         </div>
 
-        <!-- AI 面试反馈 原有功能 -->
         <div class="section-header">AI 面试反馈</div>
         <div class="content">
           <div class="ai-feedback" id="feedback-container">
-            <div v-for="(item, idx) in feedbackList" :key="idx" class="feedback-item">
+            <div
+              v-for="(item, idx) in feedbackList"
+              :key="idx"
+              class="feedback-item"
+            >
               {{ item }}
             </div>
           </div>
@@ -76,9 +101,9 @@
         <a href="#" class="footer-link">关于我们</a>
         <a href="#" class="footer-link">隐私政策</a>
         <a href="#" class="footer-link">使用条款</a>
-        <div class="copyright">© 2025 AI面试助手 | 由智能人机交互团队制作</div>
-        <div class="version">v1.0.0</div>
       </div>
+      <div class="copyright">© 2025 AI面试助手 | 由智能人机交互团队制作</div>
+      <div class="version">v1.0.0</div>
     </div>
   </div>
 </template>
@@ -92,7 +117,6 @@ import {
   DrawingUtils,
 } from "@mediapipe/tasks-vision";
 
-// Refs for UI elements and state
 const userName = ref("张小明");
 const cameraOn = ref(false);
 const analysisReady = ref(false);
@@ -104,21 +128,16 @@ const cameraView = ref(null);
 const overlay = ref(null);
 let overlayCtx = null;
 
-// MediaPipe models variables
 let gestureRecognizer = null;
 let faceLandmarker = null;
 let drawingUtils = null;
 let animationFrameId = null;
 
-// Paths for MediaPipe Tasks Vision assets
 const MEDIAPIPE_TASKS_VISION_VERSION = "0.10.22-rc.20250304";
-const GESTURE_RECOGNIZER_TASK_URL =
-  "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task";
-const FACE_LANDMARKER_TASK_URL =
-  "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
+const GESTURE_RECOGNIZER_TASK_URL = `https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task`;
+const FACE_LANDMARKER_TASK_URL = `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`;
 const VISION_WASM_URL_BASE = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_TASKS_VISION_VERSION}/wasm`;
 
-// Async function to initialize the GestureRecognizer
 async function createGestureRecognizer() {
   console.log("[createGestureRecognizer] - Initializing...");
   try {
@@ -142,7 +161,6 @@ async function createGestureRecognizer() {
   }
 }
 
-// Async function to initialize the FaceLandmarker
 async function createFaceLandmarker() {
   console.log("[createFaceLandmarker] - Initializing with blendshapes...");
   try {
@@ -153,7 +171,7 @@ async function createFaceLandmarker() {
         delegate: "GPU",
       },
       runningMode: "VIDEO",
-      outputFaceBlendshapes: true, // 关键：启用blendshapes输出
+      outputFaceBlendshapes: true,
       numFaces: 1,
       minFaceDetectionConfidence: 0.5,
       minFacePresenceConfidence: 0.5,
@@ -167,11 +185,9 @@ async function createFaceLandmarker() {
   }
 }
 
-// Function to start the webcam and detection
 async function startCamera() {
   console.log("[startCamera] - Attempting to start camera...");
 
-  // Initialize models if not ready
   if (!gestureRecognizer) {
     await createGestureRecognizer();
   }
@@ -199,7 +215,7 @@ async function startCamera() {
 
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { width: { ideal: 640 }, height: { ideal: 480 } },
+      video: { width: { ideal: 1100 }, height: { ideal: 750 } },
     });
 
     if (cameraView.value) {
@@ -299,7 +315,6 @@ async function predictWebcam() {
 }
 
 function processGestureResults(results) {
-  // Draw hand landmarks
   if (results.landmarks && results.landmarks.length > 0) {
     for (const landmarks of results.landmarks) {
       drawingUtils.drawConnectors(
@@ -318,7 +333,6 @@ function processGestureResults(results) {
     }
   }
 
-  // Update gesture text
   if (
     results.gestures &&
     results.gestures.length > 0 &&
@@ -329,8 +343,8 @@ function processGestureResults(results) {
     const categoryScore = parseFloat(topGesture.score * 100).toFixed(2);
     const handedness =
       results.handednesses &&
-        results.handednesses.length > 0 &&
-        results.handednesses[0].length > 0
+      results.handednesses.length > 0 &&
+      results.handednesses[0].length > 0
         ? results.handednesses[0][0].displayName
         : "N/A";
 
@@ -345,7 +359,6 @@ function processGestureResults(results) {
 }
 
 function processFaceResults(results) {
-  // Draw face landmarks
   if (results.faceLandmarks && results.faceLandmarks.length > 0) {
     for (const landmarks of results.faceLandmarks) {
       drawingUtils.drawConnectors(
@@ -370,21 +383,17 @@ function processFaceResults(results) {
       );
     }
 
-    // Process blendshapes
     if (results.faceBlendshapes && results.faceBlendshapes.length > 0) {
       const blendshapes = results.faceBlendshapes[0].categories;
 
-      // Extract and sort blendshapes by score
       const sortedBlendshapes = blendshapes
-        .filter((shape) => shape.score > 0.1) // Filter out low-confidence shapes
-        .sort((a, b) => b.score - a.score); // Sort by score in descending order
+        .filter((shape) => shape.score > 0.1)
+        .sort((a, b) => b.score - a.score);
 
-      // Format the blendshapes as a string
       const blendshapeLabels = sortedBlendshapes.map(
         (shape) => `${shape.categoryName} (${(shape.score * 100).toFixed(1)}%)`
       );
 
-      // Update face expression display
       faceExpression.value = blendshapeLabels.join(", ");
     } else {
       faceExpression.value = "无检测";
@@ -436,7 +445,8 @@ function analyze() {
 }
 
 onMounted(async () => {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
   if (SpeechRecognition) {
     recognition = new SpeechRecognition();
     recognition.continuous = true;
@@ -482,12 +492,10 @@ onUnmounted(() => {
     faceLandmarker = null;
   }
   console.log("Vue component UNMOUNTED. Cleaning up...");
-  // 关闭摄像头
   if (cameraOn.value) {
     const tracks = cameraView.value.srcObject.getTracks();
     tracks.forEach((t) => t.stop());
   }
-  // 关闭 MediaPipe 模型
   if (gestureRecognizer) {
     gestureRecognizer.close();
     gestureRecognizer = null;
@@ -496,13 +504,11 @@ onUnmounted(() => {
     faceLandmarker.close();
     faceLandmarker = null;
   }
-  // 停止语音识别
   if (recognition && isRecognizing.value) {
     recognition.stop();
   }
 });
 
-// 新增：语音识别状态
 const transcript = ref("");
 const isRecognizing = ref(false);
 let recognition = null;
