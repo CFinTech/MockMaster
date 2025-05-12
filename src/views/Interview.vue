@@ -64,8 +64,7 @@
         </div>
         <div class="content">
           <div class="ai-feedback" id="feedback-container">
-            <div v-for="(item, idx) in feedbackList" :key="idx" class="feedback-item">
-              {{ item }}
+            <div v-for="(item, idx) in feedbackList" :key="idx" class="feedback-item" v-html="renderMarkdown(item)">
             </div>
           </div>
         </div>
@@ -93,6 +92,7 @@ import {
   DrawingUtils,
 } from "@mediapipe/tasks-vision";
 import OpenAI from "openai";
+import { marked } from 'marked'
 
 const userName = ref("张小明");
 const cameraOn = ref(false);
@@ -558,11 +558,10 @@ async function evaluateWithDeepSeek(text) {
   try {
     const completion = await openai.chat.completions.create({
       messages: [
-        { role: "system", content: "你是一位AI面试官，需要帮助用户优化面试表现。对于以下作答，给出专业，有价值，具有帮助性，态度友好的回答。回答格式为：[总体评价][优点][改进建议]" },
+        { role: "system", content: "你是一位AI面试官，需要帮助用户优化面试表现。对于以下作答，给出专业，有价值，具有帮助性，态度友好的回答。内容上回答顺序为[总体评价][优点][改进建议]。形式上以清晰美观且可以被js的marked包直接渲染的格式输出。省略头部的“```markdown”和尾部的“```”" },
         { role: 'user', content: text }],
       model: "deepseek-chat",
     });
-    console.log(completion.choices[0].message.content);
     evaluation.value = completion.choices[0].message.content
     feedbackList.value = [evaluation.value]
   } catch (err) {
@@ -573,8 +572,11 @@ async function evaluateWithDeepSeek(text) {
   }
 }
 
-
-
+function renderMarkdown(text) {
+  const norm = text.replace(/```[a-zA-Z]*\n/, '').replace(/```/, '')
+  console.log(norm);
+  return marked.parse(norm)
+}
 
 </script>
 
