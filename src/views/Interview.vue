@@ -16,7 +16,20 @@
 
     <div class="main-content">
       <div class="camera-section">
-        <div class="section-header">您的面试</div>
+         <div class="section-header"> <!--您的面试 -->
+          <!-- <span class="question-card">
+            <p class="question-text">模拟题：{{ question }}</p>
+            <button class="refresh-btn" @click="showRandomQuestion">
+              <span class="icon">🔄</span>
+              换一题
+            </button>
+          </span> -->
+            <p class="question-text">模拟题：{{ question }}</p>
+            <button class="refresh-btn" @click="showRandomQuestion">
+              <span class="icon">🔄</span>
+              换一题
+            </button>
+        </div>
         <div class="camera-container">
           <div class="status-indicators">
             <div class="status-indicator">
@@ -135,6 +148,26 @@ const MAX_HISTORY = 30;
 const PRESSURE_HISTORY_LENGTH = 20;
 const EMOTION_HISTORY_LENGTH = 30;
 const MICRO_EXPRESSION_WINDOW = 15;
+
+const interviewQuestions = [
+  '请做一下自我介绍。',
+  '你最大的优点和缺点是什么？',
+  '为什么选择应聘我们公司？',
+  '谈谈你曾经遇到的最困难的项目及如何解决？',
+  '你未来五年职业规划是什么？',
+  '如何看待团队合作？',
+  '描述一次你在团队中发挥领导作用的经历。',
+  '你如何处理工作中的压力？',
+  '给我讲讲你在过去工作中最骄傲的成就。',
+  '如果你和同事产生分歧，你会怎么做？'
+]
+
+const question = ref('加载中...')
+
+function showRandomQuestion() {
+  const idx = Math.floor(Math.random() * interviewQuestions.length)
+  question.value = interviewQuestions[idx]
+}
 
 async function createGestureRecognizer() {
   console.log("[createGestureRecognizer] - Initializing...");
@@ -738,6 +771,7 @@ onMounted(async () => {
   console.log("Vue component MOUNTED. Initializing models...");
   await createGestureRecognizer();
   await createFaceLandmarker();
+  showRandomQuestion();
 });
 
 onUnmounted(() => {
@@ -799,8 +833,8 @@ async function evaluateWithDeepSeek(text) {
   try {
     const completion = await openai.chat.completions.create({
       messages: [
-        { role: "system", content: "你是一位AI面试官，需要帮助用户优化面试表现。对于以下作答，给出专业，有价值，具有帮助性，态度友好的回答。内容上回答顺序为[总体评价][优点][改进建议]。形式上以清晰美观且可以被js的marked包直接渲染的格式输出。省略头部的“```markdown”和尾部的“```”" },
-        { role: 'user', content: text }],
+        { role: "system", content: "你是一位AI面试官，需要帮助用户优化面试表现。对于给出的问题和用户的作答，给出专业，有价值，具有帮助性，态度友好的回答。内容上回答顺序为[总体评价][优点][改进建议]。形式上以清晰美观且可以被js的marked包直接渲染的格式输出。" },
+        { role: 'user', content:"对于问题："+question+"\n用户的回答是: "+text }],
       model: "deepseek-chat",
     });
     evaluation.value = completion.choices[0].message.content
