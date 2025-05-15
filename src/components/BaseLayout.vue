@@ -13,19 +13,19 @@
         </div>
         <ul class="menu">
           <li :class="{ active: isActive('/') }">
-            <router-link to="/">Interview Prepare</router-link>
+            <router-link to="/">面试准备</router-link>
           </li>
           <li :class="{ active: isActive('/mock') }">
-            <router-link to="/mock">Mock Interview</router-link>
+            <router-link to="/mock">模拟面试</router-link>
           </li>
           <li :class="{ active: isActive('/resumes') }">
-            <router-link to="/resumes">Resumes</router-link>
+            <router-link to="/resumes">个人简历</router-link>
           </li>
           <li :class="{ active: isActive('/tracker') }">
-            <router-link to="/tracker">Job Tracker</router-link>
+            <router-link to="/tracker">进度追踪</router-link>
           </li>
           <li :class="{ active: isActive('/calendar') }">
-            <router-link to="/calendar">Calendar</router-link>
+            <router-link to="/calendar">我的日历</router-link>
           </li>
         </ul>
       </div>
