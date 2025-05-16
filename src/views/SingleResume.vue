@@ -4,82 +4,76 @@
     <section class="form-pane">
       <!-- 顶部进度 -->
       <div class="top-bar">
-        <div class="score-text">Your resume score</div>
+        <div class="score-text">你的简历得分</div>
         <div class="progress-bar">
           <div class="fill" :style="{ width: progressPct + '%' }"></div>
         </div>
         <div class="pct-text">{{ progressPct }}%</div>
       </div>
 
-      <!-- Personal details 卡片 -->
+      <!-- 个人信息 卡片 -->
       <div class="card section-card">
-        <h2>Personal details</h2>
-        <p class="sub">
-          Users who added phone number and email received 64% more positive
-          feedback from recruiters.
-        </p>
+        <h2>个人信息</h2>
+        <p class="sub">添加电话和邮箱的用户获得了 64% 更多招聘者的积极反馈。</p>
         <label>
-          <span>Job Title</span>
-          <input v-model="personal.jobTitle" placeholder="Software Developer" />
+          <span>职位名称</span>
+          <input v-model="personal.jobTitle" placeholder="软件开发工程师" />
         </label>
         <div class="two-col">
           <label>
-            <span>First Name</span>
-            <input v-model="personal.firstName" placeholder="Kaiwen" />
+            <span>名</span>
+            <input v-model="personal.firstName" placeholder="凯文" />
           </label>
           <label>
-            <span>Last Name</span>
-            <input v-model="personal.lastName" placeholder="TUO" />
+            <span>姓</span>
+            <input v-model="personal.lastName" placeholder="拓" />
           </label>
         </div>
         <div class="two-col">
           <label>
-            <span>Email</span>
-            <input v-model="personal.email" placeholder="me@example.com" />
+            <span>邮箱</span>
+            <input v-model="personal.email" placeholder="example@邮箱.com" />
           </label>
           <label>
-            <span>Phone</span>
+            <span>电话</span>
             <input v-model="personal.phone" placeholder="+86 138 0013 8000" />
           </label>
         </div>
 
         <!-- 可选详情 -->
         <button class="more-btn" @click="showMore = !showMore">
-          {{ showMore ? "Hide details" : "Add more details" }}
+          {{ showMore ? "隐藏详情" : "添加更多详情" }}
           <span :class="showMore ? 'arrow up' : 'arrow down'"></span>
         </button>
 
         <transition name="fade">
           <div v-if="showMore" class="optional">
             <label>
-              <span>Address</span>
-              <input v-model="personal.address" placeholder="Address line" />
+              <span>地址</span>
+              <input v-model="personal.address" placeholder="地址" />
             </label>
             <div class="two-col">
               <label>
-                <span>City / State</span>
-                <input v-model="personal.city" placeholder="Shanghai" />
+                <span>城市 / 省份</span>
+                <input v-model="personal.city" placeholder="上海" />
               </label>
               <label>
-                <span>Country</span>
-                <input v-model="personal.country" placeholder="China" />
+                <span>国家</span>
+                <input v-model="personal.country" placeholder="中国" />
               </label>
             </div>
           </div>
         </transition>
       </div>
 
-      <!-- Employment history 卡片 -->
+      <!-- 工作经历 卡片 -->
       <div class="card section-card">
-        <h2>Employment history</h2>
-        <p class="sub">
-          Show your relevant experience (last 10 years). Use bullet points and
-          numbers whenever possible.
-        </p>
+        <h2>工作经历</h2>
+        <p class="sub">展示你最近十年的相关工作经验。尽可能使用要点和数字。</p>
 
         <div v-for="(job, i) in jobs" :key="i" class="job-block">
           <header class="job-head">
-            <span class="title">{{ job.jobTitle || "(Not specified)" }}</span>
+            <span class="title">{{ job.jobTitle || "(未填写)" }}</span>
             <button class="del" @click="removeJob(i)" v-if="jobs.length > 1">
               🗑
             </button>
@@ -87,44 +81,44 @@
 
           <div class="two-col">
             <label>
-              <span>Job Title</span>
+              <span>职位名称</span>
               <input v-model="job.jobTitle" />
             </label>
             <label>
-              <span>Employer</span>
+              <span>公司</span>
               <input v-model="job.employer" />
             </label>
           </div>
           <div class="two-col">
             <label>
-              <span>Start</span>
+              <span>开始</span>
               <input type="month" v-model="job.start" />
             </label>
             <label>
-              <span>End</span>
+              <span>结束</span>
               <input type="month" v-model="job.end" />
             </label>
           </div>
           <label>
-            <span>City</span>
+            <span>城市</span>
             <input v-model="job.city" />
           </label>
           <label>
-            <span>Description</span>
+            <span>描述</span>
             <textarea
               v-model="job.desc"
-              placeholder="Describe your achievements…（each line a bullet）"
+              placeholder="描述你的成就…（每行一条要点）"
             ></textarea>
           </label>
         </div>
 
-        <button class="add-btn" @click="addJob">＋ Add another position</button>
+        <button class="add-btn" @click="addJob">＋ 添加另一个职位</button>
       </div>
     </section>
 
     <!-- ---------- 右侧预览区 ---------- -->
     <aside class="preview-pane">
-      <button class="tpl-btn">Change template</button>
+      <button class="tpl-btn">更换模板</button>
       <div class="resume">
         <section class="resume-header">
           <h1>{{ personal.firstName }} {{ personal.lastName }}</h1>
@@ -136,7 +130,7 @@
         </section>
 
         <section v-if="jobs.length" class="resume-employment">
-          <h2>Employment history</h2>
+          <h2>工作经历</h2>
           <div v-for="(job, i) in jobs" :key="i" class="resume-job">
             <div class="job-line">
               <span class="job-title">{{ job.jobTitle }}</span>
@@ -157,11 +151,11 @@
     </aside>
   </div>
 </template>
-  
-  <script setup>
+
+<script setup>
 import { reactive, ref, computed } from "vue";
 
-/* Personal */
+/* 个人信息 */
 const personal = reactive({
   jobTitle: "",
   firstName: "",
@@ -174,7 +168,7 @@ const personal = reactive({
 });
 const showMore = ref(false);
 
-/* Employment */
+/* 工作经历 */
 const jobs = reactive([
   { jobTitle: "", employer: "", start: "", end: "", city: "", desc: "" },
 ]);
@@ -192,7 +186,7 @@ function removeJob(i) {
   jobs.splice(i, 1);
 }
 
-/* Progress 计算 */
+/* 进度 计算 */
 const personalFields = ["jobTitle", "firstName", "lastName", "email", "phone"];
 const employmentFields = (refs) =>
   refs.jobTitle || refs.employer || refs.start || refs.desc;
@@ -203,7 +197,7 @@ const progressPct = computed(() => {
   return Math.round((filled / total) * 100);
 });
 
-/* Utils */
+/* 工具 函数 */
 function formatMonth(val) {
   if (!val) return "–";
   const [y, m] = val.split("-");
@@ -220,6 +214,5 @@ function onUploadPhoto(e) {
   r.readAsDataURL(f);
 }
 </script>
-  
-  <style scoped src="../assets/resume.css"></style>
-  
+
+<style scoped src="../assets/resume.css"></style>
