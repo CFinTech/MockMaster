@@ -3,9 +3,9 @@
     <!-- 1. 顶部标题区 -->
     <header class="header-row">
       <h1 class="title">
-        My Interviews&nbsp;
+        我的面试&nbsp;
         <a href="#" class="job-link" @click.prevent>
-          for&nbsp;Software&nbsp;Developer
+          软件开发工程师
           <i class="i-badge" aria-hidden="true">🔷</i>
         </a>
       </h1>
@@ -27,7 +27,7 @@
             :style="{ strokeDashoffset: progressOffset }"
           />
         </svg>
-        <span class="progress-text">{{ done }} of {{ total }} completed</span>
+        <span class="progress-text">{{ done }} / {{ total }} 已完成</span>
         <transition name="fade">
           <div v-if="tooltipOpen" class="tooltip" role="tooltip">
             已完成 {{ done }} 项，还剩 {{ total - done }} 项
@@ -44,7 +44,7 @@
         :card="card"
         @done="markDone"
       />
-      <button class="create-btn" @click="modalOpen = true">+ Create new</button>
+      <button class="create-btn" @click="modalOpen = true">+ 新建</button>
     </section>
 
     <!-- 3. 标签切换区 -->
@@ -56,7 +56,7 @@
         @click="tab = 'progress'"
         :aria-selected="tab === 'progress'"
       >
-        In progress
+        进行中
       </button>
       <button
         role="tab"
@@ -65,7 +65,7 @@
         @click="tab = 'complete'"
         :aria-selected="tab === 'complete'"
       >
-        Complete
+        已完成
       </button>
       <span
         class="tab-underline"
@@ -86,8 +86,8 @@
       </ul>
 
       <div v-else-if="tab === 'complete'" key="empty" class="empty-state">
-        <p>So far, you have no complete interviews</p>
-        <button class="primary" @click="modalOpen = true">New interview</button>
+        <p>目前你还没有完成的面试</p>
+        <button class="primary" @click="modalOpen = true">新建面试</button>
       </div>
 
       <div v-else key="progress-dummy"></div>
@@ -96,9 +96,9 @@
     <!-- 6. 下方滚动区域 -->
     <section class="section">
       <h2 class="section-title">
-        <span>Polish your interview skills</span>
-        <span class="badge">Available for Premium</span>
-        <button class="lib-btn">Questions Library ❔</button>
+        <span>提升你的面试技巧</span>
+        <span class="badge">仅限高级版</span>
+        <button class="lib-btn">题库 ❔</button>
       </h2>
       <div class="h-scroll">
         <MiniCard v-for="c in skillCards" :key="c.id" :card="c" />
@@ -107,8 +107,8 @@
 
     <section class="section">
       <h2 class="section-title">
-        <span>Get ready for the real thing</span>
-        <span class="badge">Available for Premium</span>
+        <span>为真实面试做好准备</span>
+        <span class="badge">仅限高级版</span>
       </h2>
       <div class="h-scroll">
         <MiniCard v-for="c in realCards" :key="c.id" :card="c" />
@@ -119,7 +119,7 @@
     <transition name="fade">
       <div v-if="modalOpen" class="mask" @click.self="modalOpen = false">
         <div class="modal" role="dialog" aria-modal="true">
-          <h3 class="modal-title">Create new</h3>
+          <h3 class="modal-title">新建</h3>
           <div class="modal-options">
             <ModalOption
               type="question"
@@ -133,16 +133,16 @@
             />
           </div>
           <footer class="modal-actions">
-            <button class="primary" @click="confirmCreate">Create</button>
-            <button class="ghost" @click="modalOpen = false">Cancel</button>
+            <button class="primary" @click="confirmCreate">创建</button>
+            <button class="ghost" @click="modalOpen = false">取消</button>
           </footer>
         </div>
       </div>
     </transition>
   </section>
 </template>
-  
-  <script setup>
+
+<script setup>
 import { ref, computed } from "vue";
 import InterviewCard from "../components/InterviewCard.vue";
 import MiniCard from "../components/MiniCard.vue";
@@ -156,31 +156,28 @@ const cards = ref([
     id: 1,
     kind: "question",
     duration: 5,
-    title:
-      "What inspires you about the prospect of working as a Software Developer within our organization?",
+    title: "是什么激励你希望在我们组织中担任软件开发工程师？",
     done: false,
   },
   {
     id: 2,
     kind: "question",
     duration: 5,
-    title:
-      "What interests you most about the Software Developer role, and how does it resonate with your...",
+    title: "你对软件开发工程师职位最感兴趣的方面是什么？它与你的经验如何契合？",
     done: false,
   },
   {
     id: 3,
     kind: "question",
     duration: 5,
-    title:
-      "Can you detail your approach to implementing continuous integration and continuous...",
+    title: "你能详细说明你实施持续集成和持续部署的方式吗？",
     done: false,
   },
   {
     id: 4,
     kind: "interview",
     duration: 45,
-    title: "Software Developer at Bank Of America • 9 questions",
+    title: "美国银行 软件开发工程师 • 9 道问题",
     done: false,
   },
 ]);
@@ -201,7 +198,7 @@ function markDone(card) {
   }
 }
 function confirmCreate() {
-  alert(`Create new ${modalType.value}`);
+  alert(`创建新${modalType.value === "question" ? "问题" : "面试"}`);
   modalOpen.value = false;
 }
 
@@ -210,22 +207,19 @@ const skillCards = [
     id: 11,
     kind: "question",
     duration: 5,
-    title:
-      "Tell me about a time when you had to work under a tight deadline in a software development proje...",
+    title: "谈谈你在软件开发项目中必须在紧迫期限下工作的经历。",
   },
   {
     id: 12,
     kind: "question",
     duration: 5,
-    title:
-      "Describe a situation where you had to quickly adapt to a new technology or programming...",
+    title: "描述你如何快速适应新技术或编程语言的情况。",
   },
   {
     id: 13,
     kind: "question",
     duration: 5,
-    title:
-      "Can you discuss a technical challenge you faced in a previous software development role and...",
+    title: "你能讨论你在之前软件开发角色中遇到的技术挑战吗？",
   },
 ];
 const realCards = [
@@ -233,33 +227,32 @@ const realCards = [
     id: 21,
     kind: "interview",
     duration: 45,
-    title: "Software Developer at Accenture • 9 Questions",
+    title: "埃森哲 软件开发工程师 • 9 道问题",
     icon: "▶",
   },
   {
     id: 22,
     kind: "interview",
     duration: 45,
-    title: "Software Developer at Adobe • 9 Questions",
+    title: "Adobe 软件开发工程师 • 9 道问题",
     icon: "🅰",
   },
   {
     id: 23,
     kind: "interview",
     duration: 45,
-    title: "Software Developer at Amazon • 9 Questions",
+    title: "亚马逊 软件开发工程师 • 9 道问题",
     icon: "🛒",
   },
   {
     id: 24,
     kind: "interview",
     duration: 45,
-    title: "Software Developer at Apple • 9 Questions",
-    icon: "",
+    title: "苹果 软件开发工程师 • 9 道问题",
+    icon: "A",
   },
 ];
 </script>
-  
-  <style src="../assets/layout.css"></style>
-  <style src="../assets/mainpage.css"></style>
-  
+
+<style src="../assets/layout.css"></style>
+<style src="../assets/mainpage.css"></style>
