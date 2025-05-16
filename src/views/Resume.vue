@@ -3,7 +3,7 @@
     <!-- 页眉 -->
     <div class="page-header">
       <h1>Resumes &amp; Cover Letters</h1>
-      <button class="create-btn" @click="onCreateNew">+ Create New</button>
+      <button class="create-btn" @click="onCreateNew">+ 新建</button>
     </div>
 
     <!-- Tabs -->
@@ -83,10 +83,11 @@
         <!-- 新建卡片 -->
         <div class="card new-card" @click="toggleNewMenu">
           <div class="new-icon" :class="{ open: newMenuOpen }">+</div>
-          <div class="new-text">New Resume</div>
+          <div class="new-text">创建简历</div>
           <div class="new-desc">
-            Create a tailored resume for each job application. Double your
-            chances of getting hired!
+            根据具体求职需求，创建适合的简历，才能提高上岸概率！！！
+            <!-- Create a tailored resume for each job application. Double your
+            chances of getting hired! -->
           </div>
 
           <!-- 弹出菜单 -->
@@ -94,10 +95,11 @@
             <div class="new-menu-item" @click="onCreateFromTemplate">
               <div class="menu-icon">📄</div>
               <div class="menu-text">
-                <div class="title">Create a new resume</div>
+                <div class="title">创建一份新的简历</div>
                 <div class="desc">
-                  Create a new resume using a design template and fill it out
-                  from scratch
+                  使用模板创建一份新的简历，而后从头书写
+                  <!-- Create a new resume using a design template and fill it out
+                  from scratch -->
                 </div>
               </div>
             </div>
@@ -106,10 +108,11 @@
                 <div class="thumbnail" style="width: 36px; height: 52px"></div>
               </div>
               <div class="menu-text">
-                <div class="title">Duplicate existing</div>
+                <div class="title">复制已有简历</div>
                 <div class="desc">
-                  Copy an existing resume and customize it for another job or
-                  another goal
+                  复制一份已有的简历，而后根据需求调整定制
+                  <!-- Copy an existing resume and customize it for another job or
+                  another goal -->
                 </div>
               </div>
             </div>
