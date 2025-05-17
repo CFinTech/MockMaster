@@ -27,6 +27,14 @@
   color: var(--text-dark);
   overflow: hidden;
   font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --primary: #355DCE;
+  --accent: #009CF3;
+  --highlight: #70F1FF;
+  --soft-gray: #C6C6D2;
+  --mint: #E4F1E6;
+  --white: #FFFFFF;
+  --text-dark: #2C3E50;
+  --text-muted: #666;
 }
 
 /* ============ 顶部导航 ============ */
