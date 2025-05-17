@@ -97,7 +97,7 @@
     <section class="section">
       <h2 class="section-title">
         <span>提升你的面试技巧</span>
-        <span class="badge">仅限高级版</span>
+        <!-- <span class="badge">仅限高级版</span> -->
         <button class="lib-btn">题库 ❔</button>
       </h2>
       <div class="h-scroll">
@@ -108,7 +108,7 @@
     <section class="section">
       <h2 class="section-title">
         <span>为真实面试做好准备</span>
-        <span class="badge">仅限高级版</span>
+        <!-- <span class="badge">仅限高级版</span> -->
       </h2>
       <div class="h-scroll">
         <MiniCard v-for="c in realCards" :key="c.id" :card="c" />

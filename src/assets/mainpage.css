@@ -198,7 +198,7 @@ button {
 
 .big-card {
     flex: 0 0 260px;
-    height: 340px;
+    height: 280px;
     scroll-snap-align: start;
     position: relative;
     transform-style: preserve-3d;
