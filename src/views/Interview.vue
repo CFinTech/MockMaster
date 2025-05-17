@@ -1,10 +1,23 @@
 <template>
   <div class="container">
+    <!-- ========= 顶部导航 ========= -->
     <div class="top-nav">
       <a href="#" class="back-button">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" />
+        <!-- 返回箭头 -->
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M19 12H5M5 12L12 19M5 12L12 5"
+            stroke="#4CAF50"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
         返回主页
       </a>
@@ -14,23 +27,21 @@
       </div>
     </div>
 
+    <!-- ========= 主体区域 ========= -->
     <div class="main-content">
+      <!-- ==== 摄像头与指示区 ==== -->
       <div class="camera-section">
-         <div class="section-header"> <!--您的面试 -->
-          <!-- <span class="question-card">
-            <p class="question-text">模拟题：{{ question }}</p>
-            <button class="refresh-btn" @click="showRandomQuestion">
-              <span class="icon">🔄</span>
-              换一题
-            </button>
-          </span> -->
-            <p class="question-text">模拟题：{{ question }}</p>
-            <button class="refresh-btn" @click="showRandomQuestion">
-              <span class="icon">🔄</span>
-              换一题
-            </button>
+        <div class="section-header">
+          <p class="question-text">模拟题：{{ question }}</p>
+          <button class="refresh-btn" @click="showRandomQuestion">
+            <span class="icon">🔄</span>
+            换一题
+          </button>
         </div>
+
+        <!-- 摄像头画面 -->
         <div class="camera-container">
+          <!-- 左上角：摄像头 / AI 状态 -->
           <div class="status-indicators">
             <div class="status-indicator">
               摄像头: {{ cameraOn ? "已开启" : "等待开启" }}
@@ -39,16 +50,26 @@
               AI分析: {{ analysisReady ? "已开启" : "准备就绪" }}
             </div>
           </div>
+
+          <!-- 视频 + 绘制层 -->
           <video ref="cameraView" autoplay playsinline></video>
           <canvas ref="overlay" class="overlay-canvas"></canvas>
+
+          <!-- 左下角：手势 / 面部实时指标 -->
           <div class="indicator-container">
-            <div class="gesture-indicator">手势: {{ gesture }}</div>
+            <div class="gesture-indicator">{{ gesture }}</div>
             <div class="face-indicator">{{ faceExpression }}</div>
           </div>
         </div>
+
+        <!-- 摄像头控制按钮 -->
         <div class="camera-controls">
           <button @click="startCamera" class="control-btn">开启摄像头</button>
-          <button @click="stopCamera" :disabled="!cameraOn" class="control-btn stop">
+          <button
+            @click="stopCamera"
+            :disabled="!cameraOn"
+            class="control-btn stop"
+          >
             关闭摄像头
           </button>
           <button @click="analyze" class="control-btn">
@@ -57,33 +78,39 @@
         </div>
       </div>
 
+      <!-- ==== 语音、AI 反馈区 ==== -->
       <div class="feedback-section">
         <div class="section-header">语音转文字</div>
+
         <div class="speech-panel">
-          <div class="transcript">{{ transcript + interimTranscript }}</div>
-          <!-- <h3>DeepSeek 评价：</h3>
-          <p v-if="loadingEval">正在评价…</p>
-          <p v-else>{{ evaluation }}</p> -->
+          <div class="transcript">
+            {{ transcript + interimTranscript }}
+          </div>
           <div class="btn-group">
             <button class="control-btn stop" @click="startRecognition">
-              {{ isRecognizing ? '停止识别' : '开始识别' }}
+              {{ isRecognizing ? "停止识别" : "开始识别" }}
             </button>
-
           </div>
         </div>
 
-        <div class="section-header">AI 面试反馈
+        <div class="section-header">
+          AI 面试反馈
           <span v-if="loadingEval" class="spinner"></span>
         </div>
         <div class="content">
           <div class="ai-feedback" id="feedback-container">
-            <div v-for="(item, idx) in feedbackList" :key="idx" class="feedback-item" v-html="renderMarkdown(item)">
-            </div>
+            <div
+              v-for="(item, idx) in feedbackList"
+              :key="idx"
+              class="feedback-item"
+              v-html="renderMarkdown(item)"
+            ></div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- ========= 页脚 ========= -->
     <div class="footer">
       <div class="footer-links">
         <a href="#" class="footer-link">关于我们</a>
@@ -105,7 +132,7 @@ import {
   DrawingUtils,
 } from "@mediapipe/tasks-vision";
 import OpenAI from "openai";
-import { marked } from 'marked'
+import { marked } from "marked";
 
 const userName = ref("张小明");
 const cameraOn = ref(false);
@@ -123,9 +150,8 @@ let faceLandmarker = null;
 let drawingUtils = null;
 let animationFrameId = null;
 
-
 const transcript = ref("");
-const interimTranscript = ref('')
+const interimTranscript = ref("");
 const isRecognizing = ref(false);
 let recognition = null;
 
@@ -150,23 +176,23 @@ const EMOTION_HISTORY_LENGTH = 30;
 const MICRO_EXPRESSION_WINDOW = 15;
 
 const interviewQuestions = [
-  '请做一下自我介绍。',
-  '你最大的优点和缺点是什么？',
-  '为什么选择应聘我们公司？',
-  '谈谈你曾经遇到的最困难的项目及如何解决？',
-  '你未来五年职业规划是什么？',
-  '如何看待团队合作？',
-  '描述一次你在团队中发挥领导作用的经历。',
-  '你如何处理工作中的压力？',
-  '给我讲讲你在过去工作中最骄傲的成就。',
-  '如果你和同事产生分歧，你会怎么做？'
-]
+  "请做一下自我介绍。",
+  "你最大的优点和缺点是什么？",
+  "为什么选择应聘我们公司？",
+  "谈谈你曾经遇到的最困难的项目及如何解决？",
+  "你未来五年职业规划是什么？",
+  "如何看待团队合作？",
+  "描述一次你在团队中发挥领导作用的经历。",
+  "你如何处理工作中的压力？",
+  "给我讲讲你在过去工作中最骄傲的成就。",
+  "如果你和同事产生分歧，你会怎么做？",
+];
 
-const question = ref('加载中...')
+const question = ref("加载中...");
 
 function showRandomQuestion() {
-  const idx = Math.floor(Math.random() * interviewQuestions.length)
-  question.value = interviewQuestions[idx]
+  const idx = Math.floor(Math.random() * interviewQuestions.length);
+  question.value = interviewQuestions[idx];
 }
 
 async function createGestureRecognizer() {
@@ -371,8 +397,8 @@ function processGestureResults(results) {
     const categoryScore = parseFloat(topGesture.score * 100).toFixed(2);
     const handedness =
       results.handednesses &&
-        results.handednesses.length > 0 &&
-        results.handednesses[0].length > 0
+      results.handednesses.length > 0 &&
+      results.handednesses[0].length > 0
         ? results.handednesses[0][0].displayName
         : "N/A";
 
@@ -605,7 +631,7 @@ function processFaceResults(results) {
   const indicators = analyzeEmotionalIndicators(blendshapes, frameCount);
 
   // 更新显示 - 包含新旧指标
-  faceExpression.value = 
+  faceExpression.value =
     `眼神交流: ${(indicators.eyeContact * 100).toFixed(0)}%\n` +
     `微笑自然度: ${(indicators.smileNaturalness * 100).toFixed(0)}%\n` +
     `专注度: ${(indicators.focusLevel * 100).toFixed(0)}%\n` +
@@ -746,17 +772,17 @@ onMounted(async () => {
     //   }
     // }
     recognition.onresult = (event) => {
-      let interim = ''
+      let interim = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        const txt = event.results[i][0].transcript
+        const txt = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
-          transcript.value += txt
+          transcript.value += txt;
         } else {
-          interim += txt
+          interim += txt;
         }
       }
-      interimTranscript.value = interim
-    }
+      interimTranscript.value = interim;
+    };
 
     recognition.onerror = (e) => {
       console.error("语音识别出错：", e);
@@ -797,14 +823,14 @@ function startRecognition() {
   //   isRecognizing.value = true;
   // }
   if (isRecognizing.value) {
-    recognition.stop()
-    isRecognizing.value = false
-    evaluateWithDeepSeek(transcript.value)
+    recognition.stop();
+    isRecognizing.value = false;
+    evaluateWithDeepSeek(transcript.value);
   } else {
-    transcript.value = ''
-    evaluation.value = ''
-    recognition.start()
-    isRecognizing.value = true
+    transcript.value = "";
+    evaluation.value = "";
+    recognition.start();
+    isRecognizing.value = true;
   }
 }
 
@@ -814,45 +840,52 @@ function startRecognition() {
 //   }
 // }
 
-const evaluation = ref('')
-const loadingEval = ref(false)
+const evaluation = ref("");
+const loadingEval = ref(false);
 
 // sk-0f909e0c234c4fd3a582966371e29f63
 async function evaluateWithDeepSeek(text) {
-  console.log(text)
+  console.log(text);
   if (!text) {
-    evaluation.value = ''
-    return
+    evaluation.value = "";
+    return;
   }
-  loadingEval.value = true
+  loadingEval.value = true;
   const openai = new OpenAI({
-    baseURL: 'https://api.deepseek.com',
-    apiKey: 'sk-0f909e0c234c4fd3a582966371e29f63',
-    dangerouslyAllowBrowser: true
-  })
+    baseURL: "https://api.deepseek.com",
+    apiKey: "sk-0f909e0c234c4fd3a582966371e29f63",
+    dangerouslyAllowBrowser: true,
+  });
   try {
     const completion = await openai.chat.completions.create({
       messages: [
-        { role: "system", content: "你是一位AI面试官，需要帮助用户优化面试表现。对于给出的问题和用户的作答，给出专业，有价值，具有帮助性，态度友好的回答。内容上回答顺序为[总体评价][优点][改进建议]。形式上以清晰美观且可以被js的marked包直接渲染的格式输出。" },
-        { role: 'user', content:"对于问题："+question+"\n用户的回答是: "+text }],
+        {
+          role: "system",
+          content:
+            "你是一位AI面试官，需要帮助用户优化面试表现。对于给出的问题和用户的作答，给出专业，有价值，具有帮助性，态度友好的回答。内容上回答顺序为[总体评价][优点][改进建议]。形式上以清晰美观且可以被js的marked包直接渲染的格式输出。",
+        },
+        {
+          role: "user",
+          content: "对于问题：" + question + "\n用户的回答是: " + text,
+        },
+      ],
       model: "deepseek-chat",
     });
-    evaluation.value = completion.choices[0].message.content
-    feedbackList.value = [evaluation.value]
+    evaluation.value = completion.choices[0].message.content;
+    feedbackList.value = [evaluation.value];
   } catch (err) {
-    console.error('DeepSeek 评价失败：', err)
-    evaluation.value = '评价服务不可用'
+    console.error("DeepSeek 评价失败：", err);
+    evaluation.value = "评价服务不可用";
   } finally {
-    loadingEval.value = false
+    loadingEval.value = false;
   }
 }
 
 function renderMarkdown(text) {
-  const norm = text.replace(/```[a-zA-Z]*\n/, '').replace(/```/, '')
+  const norm = text.replace(/```[a-zA-Z]*\n/, "").replace(/```/, "");
   console.log(norm);
-  return marked.parse(norm)
+  return marked.parse(norm);
 }
-
 </script>
 
 <style scoped>

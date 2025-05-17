@@ -1,40 +1,64 @@
+/* interview.css */
+/*------------------------------------------
+  Interview Assistant CSS – refined indicators & controls
+  Palette: Deep Blue (#355DCE), Bright Blue (#009CF3),
+           Light Blue (#70F1FF), Soft-Gray (#C6C6D2), Mint (#E4F1E6)
+------------------------------------------*/
+
+/* 根变量定义 */
+:root {
+  --primary: #355DCE;
+  --accent: #009CF3;
+  --highlight: #70F1FF;
+  --soft-gray: #C6C6D2;
+  --mint: #E4F1E6;
+  --white: #FFFFFF;
+  --text-dark: #2C3E50;
+  --text-muted: #666;
+}
+
+/* ============ 容器 & 布局 ============ */
 .container {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100vh;
-  background-color: white;
+  background: var(--white);
+  color: var(--text-dark);
   overflow: hidden;
+  font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
+/* ============ 顶部导航 ============ */
 .top-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 24px;
-  background-color: #f9f9f9;
+  background: var(--white);
   border-bottom: 1px solid #eee;
   z-index: 100;
 }
 
+/* 返回按钮 */
 .back-button {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #2c3e50;
+  color: var(--text-dark);
   text-decoration: none;
   font-weight: 500;
   padding: 8px 16px;
   border-radius: 6px;
-  transition: all 0.3s ease;
   background-color: #f8f9fa;
   border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
 }
 
 .back-button:hover {
-  color: #4caf50;
-  background-color: #f0f7f1;
-  border-color: #d0e0d0;
+  color: var(--primary);
+  background-color: var(--mint);
+  border-color: var(--soft-gray);
   transform: translateY(-1px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
@@ -47,6 +71,7 @@
   transform: translateX(-2px);
 }
 
+/* 用户信息 */
 .user-profile {
   display: flex;
   align-items: center;
@@ -68,35 +93,40 @@
 .user-name {
   font-size: 14px;
   font-weight: 500;
-  color: #2c3e50;
+  color: var(--text-dark);
 }
 
+/* ============ 主体内容 ============ */
 .main-content {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
+/* 摄像头板块 */
 .camera-section {
   flex: 2;
   display: flex;
   flex-direction: column;
   border-right: 1px solid #eee;
   position: relative;
-  background-color: #f9f9f9f9;
+  background-color: #f9f9f9;
 }
 
+/* 各小节标题 */
 .section-header {
   padding: 16px 24px;
   font-size: 18px;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text-dark);
   border-bottom: 1px solid #eee;
-  background-color: #f9f9f9f9;
+  background-color: #f9f9f9;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
+/* 摄像头画面容器 */
 .camera-container {
   flex: 1;
   display: flex;
@@ -131,51 +161,130 @@
   left: 0;
 }
 
+/* 状态指示器 (摄像头 / AI) */
+.status-indicators {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-indicator,
+.analysis-indicator {
+  backdrop-filter: blur(6px);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: var(--white);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s;
+}
+
+.status-indicator:hover,
+.analysis-indicator:hover {
+  transform: scale(1.03);
+}
+
+.analysis-indicator {
+  background: linear-gradient(135deg, var(--highlight) 0%, var(--accent) 100%);
+}
+
+/* 手势 & 面部指标 */
+.indicator-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gesture-indicator,
+.face-indicator {
+  backdrop-filter: blur(6px);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: var(--white);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s;
+}
+
+.gesture-indicator:hover,
+.face-indicator:hover {
+  transform: scale(1.03);
+}
+
+.gesture-indicator {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--highlight) 100%);
+}
+
+.gesture-indicator::before {
+  content: "✋ ";
+}
+
+.face-indicator::before {
+  content: "😊 ";
+}
+
+/* 摄像头控制按钮 */
 .camera-controls {
   padding: 16px;
   display: flex;
   justify-content: center;
   gap: 20px;
-  background-color: #f9f9f9f9;
+  background-color: #f9f9f9;
   border-top: 1px solid #eee;
 }
 
 .control-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
+  padding: 12px 30px;
+  font-size: 15px;
+  font-weight: 600;
   border: none;
-  border-radius: 6px;
+  border-radius: 28px;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  color: var(--white);
+  background: var(--primary);
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .control-btn:hover {
-  background-color: #45a049;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.control-btn:active {
+  transform: translateY(0);
 }
 
 .control-btn.stop {
-  background-color: #f44336;
+  background: linear-gradient(135deg, #1A74D9 0%, #009CF3 100%);
 }
 
 .control-btn.stop:hover {
-  background-color: #d32f2f;
+  background: linear-gradient(135deg, #1665BF 0%, #0080CC 100%);
 }
 
 .control-btn.disabled {
-  background-color: #cccccc;
+  background: var(--soft-gray);
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
+/* ============ 语音 & AI 反馈区 ============ */
 .feedback-section {
   flex: 1;
   display: flex;
@@ -187,23 +296,40 @@
   padding-left: 20px;
   flex: 1;
   overflow-y: auto;
-  background-color: #f9f9f9f9;
+  background-color: #f9f9f9;
 }
 
+/* AI 反馈卡片 */
 .ai-feedback {
-  background-color: white;
+  background-color: var(--white);
   border-radius: 8px;
   padding: 15px 20px;
-  margin: 15px 0;
+  margin: 15px 0 15px 0;
   margin-right: 20px;
   max-height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
+  animation: fadeIn 0.5s ease-out;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 每条反馈项 */
 .feedback-item {
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px dashed #e0e0e0;
+  position: relative;
+  margin-bottom: 26px;
+  padding-left: 18px;
+  padding-bottom: 26px;
+  border-bottom: 1px dashed var(--soft-gray);
 }
 
 .feedback-item:last-child {
@@ -212,80 +338,18 @@
   border-bottom: none;
 }
 
-.feedback-title {
-  font-weight: 600;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-}
-
-.feedback-title:before {
-  content: "•";
-  color: #4caf50;
-  font-weight: bold;
-  display: inline-block;
-  width: 1em;
-  margin-left: -1em;
-}
-
-.feedback-time {
-  font-size: 12px;
-  color: #888;
-  margin-left: 10px;
-}
-
-.positive {
-  color: #4caf50;
-}
-
-.feedback-content {
-  padding-left: 15px;
-  color: #555;
-}
-
-.status-indicators {
+.feedback-item::before {
+  content: "➤";
   position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 135px;
-  display: flex;
-  flex-direction: column;
+  left: 0;
+  top: 0;
+  color: var(--accent);
+  font-weight: 700;
 }
 
-.status-indicator,
-.analysis-indicator {
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  z-index: 10;
-  margin-bottom: 10px;
-}
-
-.indicator-container {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  width: 135px;
-  display: flex;
-  flex-direction: column;
-}
-
-.gesture-indicator,
-.face-indicator {
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  z-index: 10;
-  margin-bottom: 10px;
-  white-space: pre-line;
-}
-
+/* 语音转文字面板 */
 .speech-panel {
-  background-color: #f9f9f9f9;
+  background-color: #f9f9f9;
   border-bottom: 1px solid #eee;
   display: flex;
   flex-direction: column;
@@ -294,12 +358,13 @@
 }
 
 .transcript {
-  width: 100%;
-  min-height: 100px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  padding: 10px;
-  background-color: #fff;
+  background: var(--mint);
+  border: 1px solid var(--soft-gray);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
 }
 
 .btn-group {
@@ -308,16 +373,16 @@
   gap: 20px;
 }
 
+/* ============ 页脚 ============ */
 .footer {
   padding: 12px 24px;
-  background-color: #f9f9f9f9;
+  background: var(--white);
   border-top: 1px solid #eee;
-  text-align: center;
-  font-size: 13px;
-  color: #666;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .footer-links {
@@ -326,15 +391,16 @@
 }
 
 .footer-link {
-  color: #666;
+  color: var(--text-muted);
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .footer-link:hover {
-  color: #4caf50;
+  color: var(--primary);
 }
 
+/* Loading Spinner */
 .spinner {
   width: 1em;
   height: 1em;
@@ -351,6 +417,7 @@
   }
 }
 
+/* 题目卡片（模板中注释，可视化备用） */
 .question-card {
   display: flex;
   align-items: center;
@@ -358,7 +425,7 @@
   max-width: 600px;
   width: 100%;
   padding: 24px 32px;
-  background: #ffffff;
+  background: var(--white);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
@@ -368,8 +435,7 @@
   margin: 0;
   font-size: 1.15rem;
   line-height: 1.5;
-  color: #333333;
-  /* text-color */
+  color: var(--text-dark);
 }
 
 .refresh-btn {
@@ -379,19 +445,16 @@
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
   font-weight: 600;
-  color: #ffffff;
-  background: #4f8ef7;
+  color: var(--white);
+  background: var(--accent);
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition:
-    background 0.2s,
-    transform 0.2s;
+  transition: background 0.2s, transform 0.2s;
 }
 
 .refresh-btn:hover {
-  background: #3a75d1;
-  /* primary-hover */
+  background: var(--primary);
   transform: translateY(-2px);
 }
 
