@@ -1,0 +1,150 @@
+/* Reset & 布局基础 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body,
+#app,
+.evaluation-container {
+    height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f4f6;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 顶部导航 */
+.header {
+    height: 64px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.welcome-text {
+    color: #4a4a4a;
+    margin-right: 16px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* 主体区域 */
+.main-content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+}
+
+@media (min-width: 768px) {
+    .main-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* 评分模块 */
+.score-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.score-section h2 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.score-display {
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: #4f46e5;
+}
+
+.score-max {
+    font-size: 1rem;
+    margin-left: 4px;
+}
+
+.suggestions-list {
+    list-style: disc inside;
+    color: #374151;
+    font-size: 0.875rem;
+    margin-top: 8px;
+}
+
+.suggestions-list li+li {
+    margin-top: 4px;
+}
+
+/* 图表模块 */
+.chart-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-section canvas {
+    width: 256px;
+    height: 256px;
+}
+
+/* 底部操作按钮 */
+.footer {
+    height: 64px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn {
+    padding: 8px 16px;
+    background-color: #4f46e5;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #4338ca;
+}

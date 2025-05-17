@@ -5,6 +5,7 @@ import SingleResume from '../views/SingleResume.vue'
 import Calendar from '../views/Calendar.vue'
 import Interview from '../views/Interview.vue'
 import MultiInterview from '../views/MultiInterview.vue'
+import Evaluation from '../views/Evaluation.vue'
 
 const routes = [
     {
@@ -32,6 +33,11 @@ const routes = [
     {
         path: '/multi_interview',
         component: MultiInterview,
+        meta: { layout: false }   // 这一页不使用全局 layout
+    },
+    {
+        path: '/evaluation',
+        component: Evaluation,
         meta: { layout: false }   // 这一页不使用全局 layout
     },
 ]
