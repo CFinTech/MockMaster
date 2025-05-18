@@ -357,10 +357,10 @@ async function predictWebcam() {
       video,
       startTimeMs
     );
-    // processGestureResults(gestureResults);
+    processGestureResults(gestureResults);
 
     const faceResults = faceLandmarker.detectForVideo(video, startTimeMs);
-    // processFaceResults(faceResults);
+    processFaceResults(faceResults);
   }
 
   if (cameraOn.value) {
@@ -369,6 +369,7 @@ async function predictWebcam() {
 }
 
 function processGestureResults(results) {
+  /*
   if (results.landmarks && results.landmarks.length > 0) {
     for (const landmarks of results.landmarks) {
       drawingUtils.drawConnectors(
@@ -386,6 +387,7 @@ function processGestureResults(results) {
       });
     }
   }
+  */
 
   if (
     results.gestures &&
@@ -602,6 +604,7 @@ function processFaceResults(results) {
   const blendshapes = results.faceBlendshapes[0].categories;
 
   // 绘制面部标记
+  /*
   if (results.faceLandmarks && results.faceLandmarks.length > 0) {
     for (const landmarks of results.faceLandmarks) {
       drawingUtils.drawConnectors(
@@ -626,6 +629,7 @@ function processFaceResults(results) {
       );
     }
   }
+  */
 
   // 分析动态指标
   const indicators = analyzeEmotionalIndicators(blendshapes, frameCount);
