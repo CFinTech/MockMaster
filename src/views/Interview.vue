@@ -357,10 +357,10 @@ async function predictWebcam() {
       video,
       startTimeMs
     );
-    processGestureResults(gestureResults);
+    // processGestureResults(gestureResults);
 
     const faceResults = faceLandmarker.detectForVideo(video, startTimeMs);
-    processFaceResults(faceResults);
+    // processFaceResults(faceResults);
   }
 
   if (cameraOn.value) {
