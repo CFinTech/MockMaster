@@ -61,7 +61,7 @@
               <div class="participant-avatar">{{ p.initial }}</div>
               <span>{{ p.name }}<span v-if="p.isSelf"> (您)</span></span>
             </div>
-            <div class="status-indicator" v-if="p.isSelf">
+            <!-- <div class="status-indicator" v-if="p.isSelf">
               摄像头: {{ cameraOn ? "已开启" : "等待开启" }}
             </div>
             <div class="analysis-indicator" v-if="p.isSelf">
@@ -70,7 +70,7 @@
             <div class="indicator-container" v-if="p.isSelf">
               <div class="gesture-indicator">手势: {{ gesture }}</div>
               <div class="face-indicator">面部: {{ faceExpression }}</div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

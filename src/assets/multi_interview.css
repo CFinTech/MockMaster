@@ -51,7 +51,7 @@ body {
 }
 
 .back-button:hover {
-  color: #4caf50;
+  color: #009CF3;
   background-color: #f0f7f1;
   border-color: #d0e0d0;
   transform: translateY(-1px);
@@ -157,7 +157,7 @@ body {
   height: 24px;
   border-radius: 50%;
   margin-right: 8px;
-  background-color: #4caf50;
+  background-color: #009CF3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,7 +197,7 @@ body {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #4caf50;
+  background-color: #009CF3;
   margin-right: 8px;
   display: flex;
   align-items: center;
@@ -246,12 +246,12 @@ body {
 }
 
 .chat-input-field:focus {
-  border-color: #4caf50;
+  border-color: #009CF3;
 }
 
 .send-button {
   padding: 10px 15px;
-  background-color: #4caf50;
+  background-color: #009CF3;
   color: white;
   border: none;
   border-radius: 20px;
@@ -261,7 +261,7 @@ body {
 }
 
 .send-button:hover {
-  background-color: #45a049;
+  background-color: #009CF3;
 }
 
 /* AI分析区域 */
@@ -312,7 +312,7 @@ body {
 
 .analysis-title:before {
   content: "•";
-  color: #4caf50;
+  color: #009CF3;
   font-weight: bold;
   display: inline-block;
   width: 1em;
@@ -326,7 +326,7 @@ body {
 }
 
 .positive {
-  color: #4caf50;
+  color: #009CF3;
 }
 
 .analysis-content {
@@ -346,7 +346,7 @@ body {
 
 .control-btn {
   padding: 10px 20px;
-  background-color: #4caf50;
+  background: linear-gradient(135deg, #1665BF 0%, #0080CC 100%);
   color: white;
   border: none;
   border-radius: 6px;
@@ -361,13 +361,13 @@ body {
 }
 
 .control-btn:hover {
-  background-color: #45a049;
+  background-color: #009CF3;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .control-btn.stop {
-  background-color: #f44336;
+  background: linear-gradient(135deg, #1A74D9 0%, #009CF3 100%);
   color: white;
   border: none;
   border-radius: 6px;
