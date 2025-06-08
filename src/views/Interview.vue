@@ -75,6 +75,9 @@
           <button @click="analyze" class="control-btn">
             {{ analysisReady ? "重新分析" : "开启AI分析" }}
           </button>
+            <router-link to="/evaluation">
+              <button class="control-btn">结束面试</button>
+            </router-link>
         </div>
       </div>
 

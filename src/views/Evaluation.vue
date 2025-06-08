@@ -33,7 +33,9 @@
   
       <!-- 底部操作按钮 -->
       <footer class="footer">
-        <button class="btn">再次预约</button>
+        <router-link to="/">
+          <button class="btn">返回主页</button>
+        </router-link>
         <button class="btn">下载报告</button>
       </footer>
     </div>
