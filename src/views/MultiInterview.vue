@@ -118,7 +118,7 @@
         开启AI分析
       </button>
       <router-link to="/evaluation" class="no-underline">
-        <button class="control-btn">结束面试</button>
+        <button class="control-btn stop">结束面试</button>
       </router-link>
     </div>
 
