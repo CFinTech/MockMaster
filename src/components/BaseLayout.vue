@@ -3,7 +3,10 @@
     <!-- Sidebar -->
     <aside id="sidebar">
       <div class="sidebar-content">
-        <div class="logo">MockMaster</div>
+      <div class="logo">
+        <img src="../assets/logo.jpg" alt="MockMaster Logo" class="logo-img">
+        <span class="logo-text">MockMaster</span>
+      </div>
         <div class="profile-section">
           <div class="avatar">5%</div>
           <div class="profile-info">

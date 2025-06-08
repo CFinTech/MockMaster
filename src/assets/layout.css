@@ -30,11 +30,32 @@ body {
 }
 
 .logo {
-    font-size: 1.2em;
-    font-weight: 700;
-    padding: 16px;
     display: flex;
     align-items: center;
+    padding: 0px 0px;
+    /* margin-bottom: 20px; */
+    /* border-bottom: 1px solid #e0e0e0; */
+    cursor: pointer;
+}
+
+.logo-img {
+    height: 32px;
+    width: auto;
+    margin-right: 12px;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+
+.logo-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    line-height: 1;
+}
+
+.logo:hover .logo-img {
+    transform: scale(1.1) rotate(-5deg);
 }
 
 .logo::before {
