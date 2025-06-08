@@ -11,7 +11,7 @@
           <div class="avatar">徐</div>
           <div class="profile-info">
             <div class="name">徐小铭</div>
-            <div class="role">强化学习算法工程师</div>
+            <div class="role">软件开发工程师</div>
           </div>
         </div>
         <ul class="menu">
