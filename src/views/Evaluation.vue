@@ -33,7 +33,7 @@
 
     <footer class="footer">
       <router-link to="/" custom v-slot="{ navigate }">
-        <button @click="navigate" class="btn btn-primary">返回面试</button>
+        <button @click="navigate" class="btn btn-secondary">返回面试</button>
       </router-link>
       <button class="btn btn-secondary">下载分析报告</button>
     </footer>

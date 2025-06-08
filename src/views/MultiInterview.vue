@@ -2,7 +2,8 @@
   <div class="container">
     <!-- 顶部导航栏 -->
     <div class="top-nav">
-      <a href="#" class="back-button">
+      <router-link to="/simulate" class="back-button">
+        <!-- 返回箭头 -->
         <svg
           width="16"
           height="16"
@@ -12,31 +13,17 @@
         >
           <path
             d="M19 12H5M5 12L12 19M5 12L12 5"
-            stroke="#4CAF50"
+            stroke="#355DCE"
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
           />
         </svg>
         返回主页
-      </a>
+      </router-link>
       <div class="user-profile">
         <span class="user-name">{{ userName }}</span>
-        <div class="user-avatar">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="12" cy="8" r="4" fill="#4CAF50" />
-            <path
-              d="M5.33788 18.3206C5.99897 15.5269 8.77173 14 11.6426 14H12.3574C15.2283 14 18.001 15.5269 18.6621 18.3206C18.79 18.8611 18.8917 19.4268 18.9489 20.0016C18.9825 20.3343 18.7117 20.6084 18.3776 20.5528C15.855 20.1357 13.073 20 12 20C10.927 20 8.14501 20.1357 5.62236 20.5528C5.28835 20.6084 5.0175 20.3343 5.0511 20.0016C5.1083 19.4268 5.20997 18.8611 5.33788 18.3206Z"
-              fill="#4CAF50"
-            />
-          </svg>
-        </div>
+        <div class="avatar">徐</div>
       </div>
     </div>
 
@@ -131,6 +118,9 @@
       <button id="analyze-btn" class="control-btn" @click="analyze">
         开启AI分析
       </button>
+      <router-link to="/evaluation" class="no-underline">
+        <button class="control-btn">结束面试</button>
+      </router-link>
     </div>
 
     <!-- 底部栏 -->
@@ -157,7 +147,7 @@ import {
 
 // 参与者列表
 const participants = [
-  { name: "张小明", initial: "张", isSelf: true },
+  { name: "徐小铭", initial: "徐", isSelf: true },
   { name: "王丽", initial: "王", isSelf: false },
   { name: "李强", initial: "李", isSelf: false },
   { name: "赵敏", initial: "赵", isSelf: false },
@@ -165,7 +155,7 @@ const participants = [
   { name: "陈芳", initial: "陈", isSelf: false },
 ];
 
-const userName = ref("张小明");
+const userName = ref("徐小铭");
 const cameraOn = ref(false);
 const analysisReady = ref(false);
 const videoElements = ref([]);
@@ -192,10 +182,10 @@ const chatMessages = ref([
     content: "大家好，我是李强，期待与各位合作完成今天的面试任务",
   },
   {
-    avatar: "张",
-    sender: "张小明",
+    avatar: "徐",
+    sender: "徐小铭",
     time: "10:25",
-    content: "大家好，我是张小明，很高兴认识各位",
+    content: "大家好，我是徐小铭，很高兴认识各位",
   },
 ]);
 const inputText = ref("");
@@ -518,8 +508,8 @@ function formatTime(date) {
 function sendMessage() {
   if (inputText.value.trim()) {
     chatMessages.value.push({
-      avatar: "张",
-      sender: "张小明",
+      avatar: "徐",
+      sender: "徐小铭",
       time: formatTime(new Date()),
       content: inputText.value.trim(),
     });

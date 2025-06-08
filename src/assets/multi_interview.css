@@ -342,6 +342,7 @@ body {
   gap: 20px;
   background-color: #f9f9f9;
   border-top: 1px solid #eee;
+  text-decoration: none
 }
 
 .control-btn {
@@ -358,6 +359,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  text-decoration: none
 }
 
 .control-btn:hover {
@@ -391,6 +393,10 @@ body {
 
 .control-btn.stop.disabled:hover {
   background-color: #b71c1c;
+}
+
+.no-underline {
+  text-decoration: none;
 }
 
 /* 底部栏 */

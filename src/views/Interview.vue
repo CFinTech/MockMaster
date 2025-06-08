@@ -2,7 +2,7 @@
   <div class="container">
     <!-- ========= 顶部导航 ========= -->
     <div class="top-nav">
-      <router-link to="/" class="back-button">
+      <router-link to="/simulate" class="back-button">
         <!-- 返回箭头 -->
         <svg
           width="16"
@@ -13,7 +13,7 @@
         >
           <path
             d="M19 12H5M5 12L12 19M5 12L12 5"
-            stroke="#4CAF50"
+            stroke="#355DCE"
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -75,9 +75,9 @@
           <button @click="analyze" class="control-btn">
             {{ analysisReady ? "重新分析" : "开启AI分析" }}
           </button>
-            <router-link to="/evaluation">
-              <button class="control-btn">结束面试</button>
-            </router-link>
+          <router-link to="/evaluation">
+            <button class="control-btn stop">结束面试</button>
+          </router-link>
         </div>
       </div>
 

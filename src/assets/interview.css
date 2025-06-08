@@ -65,7 +65,7 @@
 
 .back-button:hover {
   color: var(--primary);
-  background-color: var(--mint);
+  /* background-color: var(--mint); */
   border-color: var(--soft-gray);
   transform: translateY(-1px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -366,7 +366,7 @@
 }
 
 .transcript {
-  background: var(--mint);
+  /* background: var(--mint); */
   border: 1px solid var(--soft-gray);
   border-radius: 8px;
   padding: 14px;
