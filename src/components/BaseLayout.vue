@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <aside id="sidebar">
       <div class="sidebar-content">
-        <div class="logo">Mockmaster</div>
+        <div class="logo">MockMaster</div>
         <div class="profile-section">
           <div class="avatar">5%</div>
           <div class="profile-info">
