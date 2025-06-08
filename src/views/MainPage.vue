@@ -254,5 +254,5 @@ const realCards = [
 ];
 </script>
 
-<style src="../assets/layout.css"></style>
+<!-- <style src="../assets/layout.css"></style> -->
 <style src="../assets/mainpage.css"></style>

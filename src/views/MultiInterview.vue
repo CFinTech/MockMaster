@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <!-- 顶部导航栏 -->
     <div class="top-nav">
       <router-link to="/simulate" class="back-button">
         <!-- 返回箭头 -->
@@ -28,7 +27,6 @@
     </div>
 
     <div class="main-content">
-      <!-- 左侧视频区域 -->
       <div class="video-section">
         <div class="section-header">
           群体面试 - {{ participants.length }} 人参与
@@ -48,21 +46,10 @@
               <div class="participant-avatar">{{ p.initial }}</div>
               <span>{{ p.name }}<span v-if="p.isSelf"> (您)</span></span>
             </div>
-            <!-- <div class="status-indicator" v-if="p.isSelf">
-              摄像头: {{ cameraOn ? "已开启" : "等待开启" }}
-            </div>
-            <div class="analysis-indicator" v-if="p.isSelf">
-              AI分析: {{ analysisReady ? "就绪" : "准备就绪" }}
-            </div>
-            <div class="indicator-container" v-if="p.isSelf">
-              <div class="gesture-indicator">手势: {{ gesture }}</div>
-              <div class="face-indicator">面部: {{ faceExpression }}</div>
-            </div> -->
           </div>
         </div>
       </div>
 
-      <!-- 右侧聊天区域 -->
       <div class="chat-section">
         <div class="section-header">群聊</div>
         <div class="chat-messages" id="chat-messages">
@@ -88,16 +75,28 @@
         </div>
       </div>
 
-      <!-- AI分析区域 -->
       <div class="ai-analysis-section">
         <div class="analysis-header">AI面试反馈</div>
         <div class="ai-feedback" id="analysis-content">
-          <div v-for="(f, i) in analysisFeedback" :key="i">{{ f }}</div>
+          <div v-if="!analysisFeedback.length" class="feedback-placeholder">
+            点击“开启AI分析”以获取实时反馈
+          </div>
+          <div
+            class="feedback-item"
+            v-for="(item, i) in analysisFeedback"
+            :key="i"
+            :class="`feedback-item--${item.type}`"
+          >
+            <div class="feedback-icon">{{ item.icon }}</div>
+            <div class="feedback-text-content">
+              <div class="feedback-title">{{ item.title }}</div>
+              <div class="feedback-detail">{{ item.detail }}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 底部控制栏 -->
     <div class="controls">
       <button
         id="start-camera"
@@ -123,7 +122,6 @@
       </router-link>
     </div>
 
-    <!-- 底部栏 -->
     <div class="footer">
       <div class="footer-links">
         <a href="#" class="footer-link">关于我们</a>
@@ -190,7 +188,7 @@ const chatMessages = ref([
 ]);
 const inputText = ref("");
 
-// AI 分析反馈
+// [MODIFIED] AI 分析反馈，初始值为空数组
 const analysisFeedback = ref([]);
 
 // MediaPipe models variables
@@ -486,15 +484,43 @@ function stopCamera() {
 function analyze() {
   if (cameraOn.value) {
     analysisReady.value = true;
+    // [MODIFIED] 生成结构化的反馈数据
     analysisFeedback.value = [
-      "请保持眼神交流。",
-      "回答速度可以更均匀一些。",
-      "尝试多使用专业术语，提高表达精准度。",
-      `当前手势: ${gesture.value}`,
-      `当前表情: ${faceExpression.value}`,
+      {
+        type: "suggestion",
+        icon: "💡",
+        title: "核心建议",
+        detail: "回答速度可以更均匀一些，尝试多使用专业术语，提高表达精准度。",
+      },
+      {
+        type: "data",
+        icon: "✋",
+        title: "当前手势",
+        detail: gesture.value,
+      },
+      {
+        type: "data",
+        icon: "😊",
+        title: "当前表情",
+        detail: faceExpression.value,
+      },
+      {
+        type: "info",
+        icon: "👁️",
+        title: "眼神交流",
+        detail: "请尽量保持注视摄像头，如同与面试官对视。",
+      },
     ];
   } else {
-    analysisFeedback.value = ["请先开启摄像头再进行AI分析。"];
+    // [MODIFIED] 更新错误提示的结构
+    analysisFeedback.value = [
+      {
+        type: "error",
+        icon: "⚠️",
+        title: "操作提醒",
+        detail: "请先开启摄像头再进行AI分析。",
+      },
+    ];
     analysisReady.value = false;
   }
 }
@@ -602,6 +628,75 @@ onUnmounted(() => {
 }
 .analysis-indicator {
   top: 40px;
+}
+
+/* [ADDED] AI 面试反馈美化样式 */
+.ai-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* 反馈项之间的间距 */
+  padding-top: 8px;
+}
+
+.feedback-placeholder {
+  color: #888;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+}
+
+.feedback-item {
+  display: flex;
+  align-items: flex-start; /* 图标与顶部对齐 */
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-left-width: 4px; /* 左侧的彩色提示条 */
+  transition: background-color 0.2s;
+}
+
+/* 根据反馈类型设置不同的颜色提示 */
+.feedback-item--suggestion {
+  border-left-color: #3b82f6; /* 蓝色 - 建议 */
+}
+.feedback-item--data {
+  border-left-color: #22c55e; /* 绿色 - 数据 */
+}
+.feedback-item--info {
+  border-left-color: #8b5cf6; /* 紫色 - 信息 */
+}
+.feedback-item--error {
+  border-left-color: #ef4444; /* 红色 - 错误 */
+}
+
+.feedback-item:hover {
+  background-color: #f3f4f6;
+}
+
+.feedback-icon {
+  font-size: 20px;
+  margin-right: 12px;
+  margin-top: -2px; /* 微调图标垂直对齐 */
+}
+
+.feedback-text-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.feedback-title {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.feedback-detail {
+  color: #4b5563;
+  line-height: 1.5;
+  font-size: 0.95em;
 }
 </style>
 
