@@ -28,9 +28,9 @@
           <li :class="{ active: isActive('/resumes') }">
             <router-link to="/resumes">个人简历</router-link>
           </li>
-          <li :class="{ active: isActive('/tracker') }">
+          <!-- <li :class="{ active: isActive('/tracker') }">
             <router-link to="/tracker">进度追踪</router-link>
-          </li>
+          </li> -->
           <li :class="{ active: isActive('/calendar') }">
             <router-link to="/calendar">我的日历</router-link>
           </li>

@@ -30,8 +30,7 @@
         <button class="card-cta">立即开始 <span>&rarr;</span></button>
       </div>
 
-      <div class="interview-card group disabled">
-        <div class="card-status-badge">即将推出</div>
+      <div class="interview-card group" @click="startGroupInterview">
         <div class="card-icon">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -54,23 +53,30 @@
         <p class="card-description">
           在多角色AI模拟的小组讨论中，锻炼你的团队协作、沟通和领导能力。
         </p>
-        <button class="card-cta" disabled>敬请期待</button>
+        <button class="card-cta">立即开始 <span>&rarr;</span></button>
       </div>
     </main>
   </div>
 </template>
-  
-  <script setup>
+
+<script setup>
 import { useRouter } from "vue-router";
 
 // 假设你使用了 Vue Router
-// const router = useRouter();
+const router = useRouter();
 
 function startIndividualInterview() {
   console.log("开始个人面试...");
   // 在实际应用中，你可能会导航到新的路由
-  // router.push('/interview/individual');
+  router.push("/interview");
+}
+
+// [MODIFIED] 新增小组面试的点击处理函数
+function startGroupInterview() {
+  console.log("开始小组面试...");
+  // 在实际应用中，你可能会导航到新的路由
+  router.push("/multi_interview");
 }
 </script>
-  
-  <style scoped src="../assets/simulate.css"></style>
+
+<style scoped src="../assets/simulate.css"></style>
