@@ -420,3 +420,85 @@ body {
 .footer-link:hover {
   color: #4caf50;
 }
+
+/* [ADDED] AI 面试反馈美化样式 */
+
+.ai-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* 反馈项之间的间距 */
+  padding-top: 8px;
+}
+
+.feedback-placeholder {
+  color: #888;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+}
+
+.feedback-item {
+  display: flex;
+  align-items: flex-start;
+  /* 图标与顶部对齐 */
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-left-width: 4px;
+  /* 左侧的彩色提示条 */
+  transition: background-color 0.2s;
+}
+
+/* 根据反馈类型设置不同的颜色提示 */
+.feedback-item--suggestion {
+  border-left-color: #3b82f6;
+  /* 蓝色 - 建议 */
+}
+
+.feedback-item--data {
+  border-left-color: #22c55e;
+  /* 绿色 - 数据 */
+}
+
+.feedback-item--info {
+  border-left-color: #8b5cf6;
+  /* 紫色 - 信息 */
+}
+
+.feedback-item--error {
+  border-left-color: #ef4444;
+  /* 红色 - 错误 */
+}
+
+
+.feedback-item:hover {
+  background-color: #f3f4f6;
+}
+
+.feedback-icon {
+  font-size: 20px;
+  margin-right: 12px;
+  margin-top: -2px;
+  /* 微调图标垂直对齐 */
+}
+
+.feedback-text-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.feedback-title {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.feedback-detail {
+  color: #4b5563;
+  line-height: 1.5;
+  font-size: 0.95em;
+}
