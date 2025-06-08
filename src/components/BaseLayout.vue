@@ -8,10 +8,10 @@
         <span class="logo-text">MockMaster</span>
       </div>
         <div class="profile-section">
-          <div class="avatar">5%</div>
+          <div class="avatar">徐</div>
           <div class="profile-info">
-            <div class="name">add sub</div>
-            <div class="role">Set your target role</div>
+            <div class="name">徐小铭</div>
+            <div class="role">强化学习算法工程师</div>
           </div>
         </div>
         <ul class="menu">
@@ -38,9 +38,9 @@
     <div class="main-section">
       <header class="topbar">
         <nav class="topnav">
-          <router-link to="/contact">Contact Us</router-link>
+          <router-link to="/contact">联系我们</router-link>
         </nav>
-        <button class="upgrade-btn">Upgrade Now</button>
+        <button class="upgrade-btn">获取升级版</button>
       </header>
       <main id="main-content" :class="pageClass">
         <slot />
