@@ -2,7 +2,7 @@
   <div class="container">
     <!-- ========= 顶部导航 ========= -->
     <div class="top-nav">
-      <a href="#" class="back-button">
+      <router-link to="/" class="back-button">
         <!-- 返回箭头 -->
         <svg
           width="16"
@@ -20,10 +20,10 @@
           />
         </svg>
         返回主页
-      </a>
+      </router-link>
       <div class="user-profile">
         <span class="user-name">{{ userName }}</span>
-        <div class="user-avatar"></div>
+        <div class="avatar">徐</div>
       </div>
     </div>
 
@@ -137,7 +137,7 @@ import {
 import OpenAI from "openai";
 import { marked } from "marked";
 
-const userName = ref("张小明");
+const userName = ref("徐小明");
 const cameraOn = ref(false);
 const analysisReady = ref(false);
 const feedbackList = ref([]);

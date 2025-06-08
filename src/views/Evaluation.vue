@@ -3,8 +3,8 @@
     <header class="header">
       <div class="logo">MockInterview AI</div>
       <div class="user-info">
-        <span class="user-name">张小明</span>
-        <img src="https://i.pravatar.cc/40?u=zhangxiaoming" alt="User Avatar" class="avatar" />
+        <span class="user-name">徐小铭</span>
+        <div class="avatar">徐</div>
       </div>
     </header>
 
