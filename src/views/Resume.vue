@@ -1,12 +1,10 @@
 <template>
   <div class="resumes-page">
-    <!-- 页眉 -->
     <div class="page-header">
       <h1>简历 & 求职信</h1>
       <button class="create-btn" @click="onCreateNew">+ 新建</button>
     </div>
 
-    <!-- Tabs -->
     <div class="tabs">
       <button
         class="tab"
@@ -24,20 +22,22 @@
       </button>
     </div>
 
-    <!-- 简历卡片 & 新建卡片 -->
     <div class="resume-grid-container" v-if="activeTab === 'resumes'">
       <div class="resume-grid">
-        <!-- 已有简历 -->
-        <div class="card resume-card" v-for="r in resumes" :key="r.id">
-          <div class="thumbnail">
-            <!-- 可替换为 <img :src="r.thumb" /> -->
-          </div>
+        <div
+          class="card resume-card"
+          v-for="r in resumes"
+          :key="r.id"
+          @click="onEditResume(r.id)"
+          title="点击编辑简历"
+        >
+          <div class="thumbnail"></div>
           <div class="info">
             <div class="title">
               <span>{{ r.title }}</span>
               <span
                 class="icon-pencil"
-                @click="onEditTitle(r.id)"
+                @click.stop="onEditTitle(r.id)"
                 title="编辑标题"
                 >✏️</span
               >
@@ -46,32 +46,32 @@
             <span class="score-badge">{{ r.score }}% 你的简历得分</span>
             <ul class="actions">
               <li>
-                <button class="action-btn" @click="onTailor(r.id)">
+                <button class="action-btn" @click.stop="onTailor(r.id)">
                   <span class="icon">🎯</span>
                   针对职位调整
                   <span v-if="r.isNew" class="new-badge">新</span>
                 </button>
               </li>
               <li>
-                <button class="action-btn" @click="onDownloadPDF(r.id)">
+                <button class="action-btn" @click.stop="onDownloadPDF(r.id)">
                   <span class="icon">📥</span>
                   下载 PDF
                 </button>
               </li>
               <li>
-                <button class="action-btn" @click="onExport(r.id, 'docx')">
+                <button class="action-btn" @click.stop="onExport(r.id, 'docx')">
                   <span class="icon">📄</span>
                   导出为 DOCX
                 </button>
               </li>
               <li>
-                <button class="action-btn" @click="onExport(r.id, 'txt')">
+                <button class="action-btn" @click.stop="onExport(r.id, 'txt')">
                   <span class="icon">📜</span>
                   导出为 TXT
                 </button>
               </li>
               <li>
-                <button class="action-btn" @click="onMore(r.id)">
+                <button class="action-btn" @click.stop="onMore(r.id)">
                   <span class="icon">⋯</span>
                   更多
                 </button>
@@ -80,15 +80,15 @@
           </div>
         </div>
 
-        <!-- 新建卡片 -->
-        <div class="card new-card" @click="toggleNewMenu">
-          <div class="new-icon" :class="{ open: newMenuOpen }">+</div>
-          <div class="new-text">创建简历</div>
-          <div class="new-desc">
-            根据具体求职需求，创建适合的简历，才能提高上岸概率！！！
+        <div class="new-card-wrapper">
+          <div class="card new-card" @click="toggleNewMenu">
+            <div class="new-icon" :class="{ open: newMenuOpen }">+</div>
+            <div class="new-text">创建简历</div>
+            <div class="new-desc">
+              根据具体求职需求，创建适合的简历，才能提高上岸概率！！！
+            </div>
           </div>
 
-          <!-- 弹出菜单 -->
           <div v-if="newMenuOpen" class="new-menu">
             <div class="new-menu-item" @click="onCreateFromTemplate">
               <div class="menu-icon">📄</div>
@@ -111,7 +111,6 @@
       </div>
     </div>
 
-    <!-- Cover Letters 占位 -->
     <div class="coverletters-placeholder" v-else>
       <p>求职信内容将在此显示…</p>
     </div>
@@ -120,6 +119,10 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+
+// 获取 router 实例用于导航
+const router = useRouter();
 
 const activeTab = ref("resumes");
 const resumes = ref([
@@ -129,6 +132,12 @@ const newMenuOpen = ref(false);
 
 function toggleNewMenu() {
   newMenuOpen.value = !newMenuOpen.value;
+}
+
+// 导航到简历编辑页
+function onEditResume(id) {
+  console.log(`正在导航到简历 ${id} 的编辑页面...`);
+  router.push(`/singleresume`);
 }
 
 function onEditTitle(id) {
@@ -147,16 +156,42 @@ function onMore(id) {
   alert(`更多选项 ${id}`);
 }
 function onCreateNew() {
-  alert("创建新简历");
+  router.push(`/singleresume`);
 }
 function onCreateFromTemplate() {
-  alert("从模板创建新简历");
+  router.push(`/singleresume`);
 }
 function onDuplicateExisting() {
-  alert("复制现有简历");
+  router.push(`/singleresume`);
 }
 </script>
 
-<!-- 引入全局布局和本页样式 -->
 <style src="../assets/layout.css"></style>
 <style src="../assets/resumes.css"></style>
+
+<style scoped>
+/* 使简历卡片在悬停时更明显，并显示可点击的光标 */
+.resume-card {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.resume-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* “新建卡片”的包裹容器，用于定位弹出菜单 */
+.new-card-wrapper {
+  position: relative;
+}
+
+.new-menu {
+  position: absolute;
+  top: 0; /* 垂直方向与卡片顶部对齐 */
+  right: 100%; /* 将菜单的右边框对齐到其容器的左边框 */
+  margin-right: 36px; /* 在菜单和卡片之间创建一个16px的间隙 */
+  transform: none; /* 移除旧的居中 transform */
+  z-index: 10; /* 确保菜单在最上层 */
+}
+</style>
