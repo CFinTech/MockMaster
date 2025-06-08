@@ -6,6 +6,8 @@ import Calendar from '../views/Calendar.vue'
 import Interview from '../views/Interview.vue'
 import MultiInterview from '../views/MultiInterview.vue'
 import Evaluation from '../views/Evaluation.vue'
+// import Simulate from '../views/Simulate.vue'
+
 
 const routes = [
     {
@@ -25,6 +27,10 @@ const routes = [
         path: '/calendar',
         component: Calendar,
     },
+    // {
+    //     path: '/simulate',
+    //     component: Simulate,
+    // },
     {
         path: '/interview',
         component: Interview,

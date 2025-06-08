@@ -174,6 +174,8 @@ function onDuplicateExisting() {
 .resume-card {
   cursor: pointer;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  width: 550px;
+  height: 300px;
 }
 
 .resume-card:hover {
@@ -184,6 +186,8 @@ function onDuplicateExisting() {
 /* “新建卡片”的包裹容器，用于定位弹出菜单 */
 .new-card-wrapper {
   position: relative;
+  width: 550px;
+  height: 350px;
 }
 
 .new-menu {
