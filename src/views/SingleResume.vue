@@ -1,8 +1,6 @@
 <template>
   <div class="builder-page">
-    <!-- ---------- 左侧表单区 ---------- -->
     <section class="form-pane">
-      <!-- 顶部进度 -->
       <div class="top-bar">
         <div class="score-text">你的简历得分</div>
         <div class="progress-bar">
@@ -11,7 +9,6 @@
         <div class="pct-text">{{ progressPct }}%</div>
       </div>
 
-      <!-- 个人信息 卡片 -->
       <div class="card section-card">
         <h2>个人信息</h2>
         <p class="sub">添加电话和邮箱的用户获得了 64% 更多招聘者的积极反馈。</p>
@@ -40,7 +37,6 @@
           </label>
         </div>
 
-        <!-- 可选详情 -->
         <button class="more-btn" @click="showMore = !showMore">
           {{ showMore ? "隐藏详情" : "添加更多详情" }}
           <span :class="showMore ? 'arrow up' : 'arrow down'"></span>
@@ -66,7 +62,6 @@
         </transition>
       </div>
 
-      <!-- 工作经历 卡片 -->
       <div class="card section-card">
         <h2>工作经历</h2>
         <p class="sub">展示你最近十年的相关工作经验。尽可能使用要点和数字。</p>
@@ -116,9 +111,11 @@
       </div>
     </section>
 
-    <!-- ---------- 右侧预览区 ---------- -->
     <aside class="preview-pane">
-      <button class="tpl-btn">更换模板</button>
+      <div class="preview-actions">
+        <button class="preview-btn" @click="goToHome">返回主页</button>
+        <button class="preview-btn">更换模板</button>
+      </div>
       <div class="resume">
         <section class="resume-header">
           <h1>{{ personal.firstName }} {{ personal.lastName }}</h1>
@@ -154,6 +151,9 @@
 
 <script setup>
 import { reactive, ref, computed } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 /* 个人信息 */
 const personal = reactive({
@@ -198,6 +198,9 @@ const progressPct = computed(() => {
 });
 
 /* 工具 函数 */
+function goToHome() {
+  router.push("/resumes");
+}
 function formatMonth(val) {
   if (!val) return "–";
   const [y, m] = val.split("-");
@@ -216,3 +219,26 @@ function onUploadPhoto(e) {
 </script>
 
 <style scoped src="../assets/resume.css"></style>
+
+<style scoped>
+.preview-actions {
+  display: flex;
+  justify-content: flex-end; /* Aligns buttons to the right */
+  gap: 12px; /* Adds space between buttons */
+  margin-bottom: 16px; /* Adds space below the buttons */
+}
+
+/* [MODIFIED] Created a shared class for consistent button styling */
+.preview-btn {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap; /* Prevents text from wrapping */
+}
+.preview-btn:hover {
+  background-color: #e5e5e5;
+}
+</style>
