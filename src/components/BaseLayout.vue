@@ -3,10 +3,14 @@
     <!-- Sidebar -->
     <aside id="sidebar">
       <div class="sidebar-content">
-      <div class="logo">
-        <img src="../assets/logo.jpg" alt="MockMaster Logo" class="logo-img">
-        <span class="logo-text">MockMaster</span>
-      </div>
+        <div class="logo">
+          <img
+            src="../assets/logo.jpg"
+            alt="MockMaster Logo"
+            class="logo-img"
+          />
+          <span class="logo-text">MockMaster</span>
+        </div>
         <div class="profile-section">
           <div class="avatar">徐</div>
           <div class="profile-info">
@@ -18,15 +22,15 @@
           <li :class="{ active: isActive('/') }">
             <router-link to="/">面试准备</router-link>
           </li>
-          <li :class="{ active: isActive('/mock') }">
-            <router-link to="/mock">模拟面试</router-link>
+          <li :class="{ active: isActive('/simulate') }">
+            <router-link to="/simulate">模拟面试</router-link>
           </li>
           <li :class="{ active: isActive('/resumes') }">
             <router-link to="/resumes">个人简历</router-link>
           </li>
-          <li :class="{ active: isActive('/tracker') }">
+          <!-- <li :class="{ active: isActive('/tracker') }">
             <router-link to="/tracker">进度追踪</router-link>
-          </li>
+          </li> -->
           <li :class="{ active: isActive('/calendar') }">
             <router-link to="/calendar">我的日历</router-link>
           </li>

@@ -1,0 +1,180 @@
+/* --- 全局与页面布局 --- */
+.simulate-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 24px;
+    background-color: #f7f9fc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #333;
+}
+
+/* --- 页面头部 --- */
+.simulate-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.simulate-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 16px;
+}
+
+.simulate-header p {
+    font-size: 1.125rem;
+    color: #606f7b;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* --- 卡片容器 --- */
+.interview-cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    /* 在小屏幕上换行 */
+}
+
+/* --- 卡片通用样式 --- */
+.interview-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 380px;
+    min-height: 360px;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    /* 用于角标定位 */
+}
+
+.interview-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(41, 128, 185, 0.1);
+}
+
+/* --- 卡片内部元素 --- */
+.card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    width: 80px;
+    margin-bottom: 24px;
+    background-color: #ecf5ff;
+    border-radius: 50%;
+    color: #3498db;
+}
+
+.card-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 12px;
+}
+
+.card-description {
+    font-size: 1rem;
+    color: #606f7b;
+    line-height: 1.6;
+    flex-grow: 1;
+    /* 让描述占据多余空间，将按钮推到底部 */
+}
+
+/* --- 卡片 Call-to-Action 按钮 --- */
+.card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 24px;
+    margin-top: 24px;
+    /* 与描述的间距 */
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    justify-content: center;
+}
+
+.card-cta:hover {
+    background-color: #2980b9;
+    transform: scale(1.02);
+}
+
+.card-cta span {
+    transition: transform 0.3s ease;
+}
+
+.card-cta:hover span {
+    transform: translateX(4px);
+}
+
+/* --- 禁用状态的卡片 --- */
+.interview-card.disabled {
+    filter: grayscale(80%);
+    opacity: 0.7;
+}
+
+.interview-card.disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    cursor: not-allowed;
+}
+
+.interview-card.disabled .card-cta {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+.interview-card.disabled .card-cta:hover {
+    background-color: #bdc3c7;
+    transform: none;
+}
+
+/* --- “即将推出”角标 --- */
+.card-status-badge {
+    position: absolute;
+    top: 18px;
+    right: -40px;
+    padding: 6px 40px;
+    background-color: #e67e22;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+/* --- 响应式设计 --- */
+@media (max-width: 768px) {
+    .simulate-header h1 {
+        font-size: 2.5rem;
+    }
+
+    .simulate-header p {
+        font-size: 1rem;
+    }
+
+    .interview-cards-container {
+        gap: 24px;
+    }
+}
