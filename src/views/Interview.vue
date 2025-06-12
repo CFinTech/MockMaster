@@ -372,7 +372,6 @@ async function predictWebcam() {
 }
 
 function processGestureResults(results) {
-  /*
   if (results.landmarks && results.landmarks.length > 0) {
     for (const landmarks of results.landmarks) {
       drawingUtils.drawConnectors(
@@ -390,7 +389,6 @@ function processGestureResults(results) {
       });
     }
   }
-  */
 
   if (
     results.gestures &&
@@ -607,7 +605,7 @@ function processFaceResults(results) {
   const blendshapes = results.faceBlendshapes[0].categories;
 
   // 绘制面部标记
-  /*
+
   if (results.faceLandmarks && results.faceLandmarks.length > 0) {
     for (const landmarks of results.faceLandmarks) {
       drawingUtils.drawConnectors(
@@ -632,7 +630,6 @@ function processFaceResults(results) {
       );
     }
   }
-  */
 
   // 分析动态指标
   const indicators = analyzeEmotionalIndicators(blendshapes, frameCount);
@@ -756,28 +753,28 @@ onMounted(async () => {
     recognition.interimResults = false;
     recognition.lang = "zh-CN";
 
-    // recognition.onresult = (event) => {
-    //   let interim = "";
-    //   for (let i = event.resultIndex; i < event.results.length; i++) {
-    //     const text = event.results[i][0].transcript;
-    //     if (event.results[i].isFinal) {
-    //       transcript.value += text;
-    //       evaluateWithDeepSeek(transcript.value)
-    //     } else {
-    //       interim += text;
-    //     }
-    //   }
-    //   interimTranscript.value = interim
-    // };
-    // recognition.onresult = (event) => {
-    //   // 只处理 isFinal=true，即最终结果
-    //   for (let i = event.resultIndex; i < event.results.length; i++) {
-    //     if (event.results[i].isFinal) {
-    //       transcript.value += event.results[i][0].transcript
-    //       evaluateWithDeepSeek(transcript.value) // 停后才调用 DeepSeek
-    //     }
-    //   }
-    // }
+    recognition.onresult = (event) => {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const text = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          transcript.value += text;
+          evaluateWithDeepSeek(transcript.value);
+        } else {
+          interim += text;
+        }
+      }
+      interimTranscript.value = interim;
+    };
+    recognition.onresult = (event) => {
+      // 只处理 isFinal=true，即最终结果
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          transcript.value += event.results[i][0].transcript;
+          evaluateWithDeepSeek(transcript.value); // 停后才调用 DeepSeek
+        }
+      }
+    };
     recognition.onresult = (event) => {
       let interim = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
