@@ -753,6 +753,7 @@ onMounted(async () => {
     recognition.interimResults = false;
     recognition.lang = "zh-CN";
 
+    /*
     recognition.onresult = (event) => {
       let interim = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -774,7 +775,7 @@ onMounted(async () => {
           evaluateWithDeepSeek(transcript.value); // 停后才调用 DeepSeek
         }
       }
-    };
+    };*/
     recognition.onresult = (event) => {
       let interim = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
