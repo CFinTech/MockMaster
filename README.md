@@ -1,10 +1,11 @@
+
 <p align="center">
 <img src="./figures/logo.jpg" width="20%"> <br>
 </p>
 
 <div align="center">
 <h1>MockMaster - AI 与 HCI 赋能的模拟面试系统</h1>
-<div>
+</div>
 
 
 
