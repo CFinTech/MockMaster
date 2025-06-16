@@ -20,7 +20,7 @@ MockMaster 是一款基于 AI 技术的模拟面试系统，通过计算机视�
 ## ✨ 核心功能
 
 ### 1. 面部表情实时分析
-![面部识别示意图](./figures/facial_recognition.jpg)
+![面部识别示意图](./figures/facial_recognition.png)
 
 系统使用 MediaPipe Face Landmarker 模型实时检测：
 - 眼神交流频率
@@ -30,7 +30,7 @@ MockMaster 是一款基于 AI 技术的模拟面试系统，通过计算机视�
 - 微表情变化
 
 ### 2. 手势识别分析
-![手势识别示意图](./figures/gesture_recognition.jpg)
+![手势识别示意图](./figures/gesture_recognition.png)
 
 通过手势识别模型检测：
 - 常用手势（OK、点赞、指向等）
@@ -112,5 +112,5 @@ mockmaster/
 └── vite.config.js                # Vite配置文件
 ```
 
-## 🤝 贡献指南
-欢迎提交 Pull Request 或 Issue 报告问题。
+## 🤝 贡献
+欢迎提交 Pull Request 或 Issue 
